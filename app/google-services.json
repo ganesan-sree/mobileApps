@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "996322474766",
+    "firebase_url": "https://freshvegbox-735a1.firebaseio.com",
+    "project_id": "freshvegbox-735a1",
+    "storage_bucket": "freshvegbox-735a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996322474766:android:c72f4b954796e2e4",
+        "android_client_info": {
+          "package_name": "com.vegfreshbox.ecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "996322474766-1j8e6ulajv09bt0r8c03brtbr9ek9a69.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSHuU2V4NrfQMiw_O7loqh5jvcHFRG_JY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

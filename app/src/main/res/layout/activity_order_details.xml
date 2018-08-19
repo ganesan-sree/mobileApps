@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_order_details"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.vegfreshbox.ecommerce.OrderDetailsActivity">
+
+    <ListView
+        android:id="@+id/orderhistoryproductslist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_panel">
+    </ListView>
+
+
+    <LinearLayout
+        android:id="@+id/bottom_panel"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent">
+
+
+            <LinearLayout
+                android:id="@+id/cart12"
+                android:layout_width="match_parent"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Total"
+                    android:textColor="#ffffff"
+                    android:textStyle="italic|bold"
+                    android:layout_weight="1"
+                    android:padding="5dip"
+                    android:gravity="left"
+                    />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="5dip"
+                    android:gravity="right"
+                    android:text="Price"
+                    android:textStyle="bold"
+                    android:id="@+id/totalprice"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery Address"
+                    android:textColor="#ffffff"
+                    android:textStyle="italic|bold"
+                    android:layout_weight="1"
+                    android:padding="5dip"
+                    android:gravity="left"
+                    />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="5dip"
+                    android:gravity="right"
+                    android:text="DeliveryAddress"
+                    android:textStyle="bold"
+                    android:id="@+id/deliveryAddress"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
