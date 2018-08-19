@@ -83,7 +83,7 @@ public class HomeActivity extends AppCompatActivity implements
 				//String value = getIntent().getExtras().getString(key);
 				if (key.equals("AnotherActivity") && getIntent().getExtras().getString(key).equals("True")) {
 					Intent intent = new Intent(this, AnotherActivity.class);
-					//intent.putExtra("value", getIntent().getExtras().getString(key));
+					intent.putExtra("message", getIntent().getExtras().getString("message"));
 					startActivity(intent);
 					finish();
 				}
@@ -330,7 +330,7 @@ public class HomeActivity extends AppCompatActivity implements
 				output = text.toString();
 			}else{
 				readCategoryFireBaseDatabase();
-				Log.e("File not found","Firebase file not found11111111111111111111111"+output);
+				Log.e("File not found","Firebase Storage file not Found");
 			}
 
 		} catch (IOException e) {
@@ -344,7 +344,6 @@ public class HomeActivity extends AppCompatActivity implements
 	
 	private void readCategoryFireBaseDatabase() {
 		FireBaseService f = new FireBaseService();
-
 		try {
 			f.execute();
 		}catch (Exception e){
@@ -388,13 +387,8 @@ public class HomeActivity extends AppCompatActivity implements
 
 				  @Override
 				  protected String doInBackground(String... params) {
-
-
 					  final UserService userService = new UserService();
-
-
 					  FirebaseResponse output = null;
-
 					  try {
 						  output=userService.getCategory();
 						  Thread.sleep(5);
@@ -408,29 +402,22 @@ public class HomeActivity extends AppCompatActivity implements
 							  } catch (Exception e) {
 								  Log.e("Error writing file", e.getMessage());
 							  }
-
-
 						  }
-						  Log.e("Database","=== "+category);
 					  } catch (Exception e) {
 						  Log.e("error parsing ","category json file",e);
 					  }
-
 					  return "";
-
 				  }
 
 				  @Override
 				  protected void onPostExecute(String result) {
 					  super.onPostExecute(result);
-
-					  Log.e("Registrated", "Done Registration.==" + result);
+					  Log.e(TAG, "CAlling category done!");
 					  mProgressDialog.dismiss();
-
-
-					  mProgressDialog.dismiss();
-
 				  }
 			  }
+
+
+
 
 }
