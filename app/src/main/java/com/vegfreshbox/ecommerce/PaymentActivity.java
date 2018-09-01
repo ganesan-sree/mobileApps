@@ -37,23 +37,23 @@ import java.util.Iterator;
 
 public class PaymentActivity extends AppCompatActivity {
 
-    public static double totalpay=0.000;
+    public static double totalpay = 0.000;
     public static MyCart mycartdb;
     Button btnpayment;
     private ProgressDialog mProgressDialog;
-    TextView paymentamount,paymentcardholdername,paymentcardnumber,paymentcardexpiremonth,paymentcardexpireyear,paymentcardcvv;
+    TextView paymentamount, paymentcardholdername, paymentcardnumber, paymentcardexpiremonth, paymentcardexpireyear, paymentcardcvv;
 
-    ArrayList<Product> products ;
+    ArrayList<Product> products;
     ArrayList<String> productid;
-    
+
     ArrayList<String> productname;
     ArrayList<String> productprice;
     ArrayList<String> productquantity;
     double shippingcharge;
-    String userId=null;
-    RadioButton paymentcreditradio,codradio;
-    String addressid="1";
-    LinearLayout carddetails,codpaymentbutton;
+    String userId = null;
+    RadioButton paymentcreditradio, codradio;
+    String addressid = "1";
+    LinearLayout carddetails, codpaymentbutton;
     SharedPreferences sharedPreferences;
 
     @Override
@@ -64,168 +64,166 @@ public class PaymentActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         Bundle bd = intent.getExtras();
         if (bd != null) {
-         
-            addressid=(String)bd.get("addressId");
-         Log.e("Addres Id selected ",addressid);
+
+            addressid = (String) bd.get("addressId");
+            Log.e("Addres Id selected ", addressid);
         }
 
 
         sharedPreferences = getSharedPreferences(
-				"loginstate", MODE_PRIVATE);
-        
+                "loginstate", MODE_PRIVATE);
+
         mProgressDialog = new ProgressDialog(PaymentActivity.this);
 
-        paymentamount=(TextView)findViewById(R.id.paymentamount);
-        btnpayment=(Button)findViewById(R.id.btnpayment);
+        paymentamount = (TextView) findViewById(R.id.paymentamount);
+        btnpayment = (Button) findViewById(R.id.btnpayment);
 
 
-
-        mycartdb=new MyCart(PaymentActivity.this);
+        mycartdb = new MyCart(PaymentActivity.this);
         mycartdb.open();
         Cursor c = mycartdb.getAllData();
 
-        totalpay=0;
+        totalpay = 0;
         if (c.moveToFirst()) {
             do {
 
-                totalpay+= (Double.parseDouble(c.getString(5)))*Integer.parseInt(c.getString(7));
+                totalpay += (Double.parseDouble(c.getString(5))) * Integer.parseInt(c.getString(7));
 
             } while (c.moveToNext());
         }
-        paymentamount.setText("Total Order amount  , INR "+String.valueOf(totalpay)+"\n\n ");
+        paymentamount.setText("Total Order amount  , INR " + String.valueOf(totalpay) + "\n\n ");
 
 
         mycartdb.close();
 
 
-        
-     // GET ALL PRODUCTS AND SEND TO SERVER
-     		
-     		products= new ArrayList<Product>();
+        // GET ALL PRODUCTS AND SEND TO SERVER
 
-     		mycartdb.open();
-     		Cursor cursor = mycartdb.getAllData();
-     		if (cursor.moveToFirst()) {
-     			do {
-     				// SET ALL PRODUCTS IN ARRAY
-     			Product p=	new Product(cursor.getString(1),String.valueOf(cursor.getString(2)),
-     					String.valueOf(cursor.getString(5)),String.valueOf(cursor.getString(6)), String.valueOf(cursor.getString(7)));
-     				//Log.e("wwwwwwwwwwwww",cursor.getString(4));
-     			p.setImagelocal(cursor.getString(4));
-     			p.setProductImage(cursor.getString(3));
-     			products.add(p);
-     			} while (cursor.moveToNext());
-     		}
-        
-	        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        products = new ArrayList<Product>();
+
+        mycartdb.open();
+        Cursor cursor = mycartdb.getAllData();
+        if (cursor.moveToFirst()) {
+            do {
+                // SET ALL PRODUCTS IN ARRAY
+                Product p = new Product(cursor.getString(1), String.valueOf(cursor.getString(2)),
+                        String.valueOf(cursor.getString(5)), String.valueOf(cursor.getString(6)), String.valueOf(cursor.getString(7)));
+                //Log.e("wwwwwwwwwwwww",cursor.getString(4));
+                p.setImagelocal(cursor.getString(4));
+                p.setProductImage(cursor.getString(3));
+                products.add(p);
+            } while (cursor.moveToNext());
+        }
+
+        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         //StrictMode.setThreadPolicy(policy); 
-        
-        //Toast.makeText(PaymentActivity.this,listhh.toString(),Toast.LENGTH_LONG).show();
-
-//        end array
-
-		btnpayment.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-
-				if(VegUtils.isOnline(PaymentActivity.this)){
-					userId = sharedPreferences.getString("userid", null);
-					new FireBaseService().execute("");
-				}else{
-					Toast.makeText(PaymentActivity.this, "You are not connected to Internet please go online", Toast.LENGTH_SHORT).show();
-				}
 
 
-			}
-		});
+        btnpayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-	
+                if (VegUtils.isOnline(PaymentActivity.this)) {
+                    userId = sharedPreferences.getString("userid", null);
+                    new FireBaseService().execute("");
+                } else {
+                    Toast.makeText(PaymentActivity.this, "You are not connected to Internet please go online", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
+
     }
+
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
 
-    
-    
+
     private class FireBaseService extends AsyncTask<String, Void, String> {
 
-		FirebaseResponse res = null;
-	boolean isOrderCreated =false;
-		Order order =null;
-		AddressPojo addressData = null;
+        FirebaseResponse res = null;
+        boolean isOrderCreated = false;
+        Order order = null;
+        AddressPojo addressData = null;
+        String userEmailAddress=null;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
+            mProgressDialog.show();
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setMessage(getString(R.string.loading));
 
-			mProgressDialog.show();
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setMessage(getString(R.string.loading));
+            Log.e("Hi", "Connecting firebase for order create");
 
-			Log.e("Hi", "Connecting firebase for order create");
+            addressData = getAddressData(addressid);
 
-			addressData = getAddressData(addressid);
+        }
 
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			final UserService userService = new UserService();
-			Log.e("344344", "Create Order Started");
-
-
-			try {
-				
-				if (userId != null) {
-					
-					
-					
-					order = userService.createNewOrder(userId,
-							String.valueOf(totalpay), products, addressData.toString());
-
-					SharedPreferences.Editor editor = sharedPreferences.edit();
-					FirebaseResponse res = userService.getUserById(userId);
-					String userData = res.getRawBody();
-					if (userData != null) {
-						editor.putString("userData", userData);
-					}
-
-					editor.commit();
-
-					Thread thread = new Thread(){
-						public void run(){
-							sendMail(addressData,order);
-						}
-					};
-
-					thread.start();
+        @Override
+        protected String doInBackground(String... params) {
+            final UserService userService = new UserService();
+            Log.e("Payment", "Creating Order Started");
 
 
+            try {
 
-				}
-	                
+                if (userId != null) {
 
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+                    order = userService.createUserOrder(userId,
+                            String.valueOf(totalpay), products, addressData.toString());
 
-			return "Executed!";
+                    userService.createNewOrder(userId,
+                            String.valueOf(totalpay), products, addressData.toString(),order.getOrderId());
 
-		}
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    FirebaseResponse res = userService.getUserById(userId);
+                    final String userData = res.getRawBody();
+                    if (userData != null) {
+                        editor.putString("userData", userData);
+                    }
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			mProgressDialog.dismiss();
-			Log.e("Hi", "Done Downloading.==" + result);
-			try {
+                    editor.commit();
 
-				mycartdb.open();
-				mycartdb.deleteAllData();
-				mycartdb.close();
+                    Thread thread = new Thread() {
+                        public void run() {
+                           String[] con= userService.getConfig();
+                            Log.e("Email Address to sent",userService.getEmailAddress(userData));
+                            Log.e("Email Address to email",""+con[0]+"  "+con[1]);
+                            sendMail(addressData, order,userService.getEmailAddress(userData),con);
+                        }
+                    };
+
+                    thread.start();
+
+
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return "Executed!";
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            mProgressDialog.dismiss();
+            Log.e("Hi", "Done Downloading.==" + result);
+            try {
+
+                mycartdb.open();
+                mycartdb.deleteAllData();
+                mycartdb.close();
 
 
                 LayoutInflater inflater = getLayoutInflater();
@@ -233,7 +231,7 @@ public class PaymentActivity extends AppCompatActivity {
                         (ViewGroup) findViewById(R.id.custom_toast_container));
 
                 TextView text = (TextView) layout.findViewById(R.id.text);
-                text.setText("Congrats, Your Order Placed Successfully!");
+                text.setText("Congrats, Your Order Placed Successfully, Confirmation Sent to mail address!");
 
                 Toast toast = new Toast(getApplicationContext());
                 toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
@@ -241,165 +239,146 @@ public class PaymentActivity extends AppCompatActivity {
                 toast.setView(layout);
                 toast.show();
 
-				//Toast.makeText(getApplicationContext(),
-				//		"Congrats, Your Order Placed Successfully!",
-				//		Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent(getApplicationContext(),
-					HomeActivity.class);
+                //Toast.makeText(getApplicationContext(),
+                //		"Congrats, Your Order Placed Successfully!",
+                //		Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(),
+                        HomeActivity.class);
 
-				startActivity(intent);
-				finish();
-			} catch (Exception e) {
-				e.printStackTrace();
-				Toast.makeText(getApplicationContext(),
-						"Something went wrong please try again!",
-						Toast.LENGTH_SHORT).show();
-			}
+                startActivity(intent);
+                finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(),
+                        "Something went wrong please try again!",
+                        Toast.LENGTH_SHORT).show();
+            }
 
-			
 
-		}
-	}
-    
-    private void sendMail(AddressPojo addressData,Order order){
-    	
-    	
-    	try {
-			Log.e("eee", "start sending mail");
-
-			GMailSender sender = new GMailSender(
-
-			"freshvegbox@gmail.com",
-
-			"yojitha@2015");
-
-			// sender.addAttachment(Environment.getExternalStorageDirectory().getPath()+"/image.jpg");
-
-			sender.sendMail(
-					"Order Detail",
-					getEmailBody(addressData,order),
-
-					"freshvegbox@gmail.com",
-					"anandkumarreddy@gmail.com");
-
-		} catch (Exception e) {
-			Log.e("MailApp", "Could not send email", e);
-		}
-    	
+        }
     }
-    
-	String getEmailBody(AddressPojo addressData, Order order) {
 
-		Log.e("Errrrrrrrrrrrrrrrrrr", "addresss====" + addressData);
-		Log.e("Errrrrrrrrrrrrrrrrrr", "addresss====" + addressData.getFlat());
-		Log.e("Errrrrrrrrrrrrrrrrrr", "addresss====" + addressData.getColony());
-		Log.e("Errrrrrrrrrrrrrrrrrr", "addresss====" + addressData.getPincode());
-		String pr = "";
-		String prdHtml=loadProductFromAsset();
-		for (Product p : products) {
-			String productHtml=prdHtml;
-			
-			productHtml=productHtml.replace("#productname#", ""+p.getProductName());
-			productHtml=productHtml.replace("#qty#", ""+p.getProductQuantity());
-			productHtml=productHtml.replace("#prdprice#", ""+ VegUtils.getSubTotal(p.getProductPrice(),
-					p.getProductQuantity()));
-			productHtml=productHtml.replace("#wgt#", ""+p.getWgt());
-			pr=pr+productHtml;
-		}
-		String body = "";
-
-		body = loadOrderConfirmationFromAsset();
-
-		body = body.replace("#orderno#", "" + order.getOrderId());
-		body = body.replace("#orderdate#", "" + order.getOrderDate());
-		body = body.replaceAll("#total#", "" + order.getOrderTotal());
-		
-		body = body.replace("#fullname#", "" + addressData.getName());
-		body = body.replace("#address1#", "" + addressData.getFlat());
-		body = body.replace("#address2#", "" + addressData.getColony());
-		body = body.replace("#city#",
-				"" + addressData.getCity() + " " + addressData.getPincode());
-		body = body.replace("#phone#", "" + addressData.getMobile());
-		body = body.replace("#productlist#", pr);
-		// body=body.replace("#productlist#", MailServices.product);
-
-		return body;
-
-	}
-    
-    
-	AddressPojo getAddressData(String addressId) {
-		AddressPojo addressData = new AddressPojo();
-		String userData = sharedPreferences.getString("userData", null);
-		try {
-			JSONObject resp = new JSONObject(userData);
-
-			if (resp.has("address")) {
-				JSONObject address = (JSONObject) resp.get("address");
-				Iterator<String> keys = address.keys();
-
-				while (keys.hasNext()) {
-					// System.out.println(keys.next());
-					String addId = keys.next();
-
-					if (addId.equals(addressId)) {
-						JSONObject addr = (JSONObject) address.get(addressId);
-						addressData.setName(addr.getString("fullName"));
-						addressData.setFlat(addr.getString("address1"));
-						addressData.setColony(addr.getString("address2"));
-						addressData.setCity(addr.getString("city"));
-						addressData.setPincode(addr.getString("pincode"));
-						addressData.setMobile(addr.getString("mobileNumber"));						
-
-					}
-
-				}
-			}
-		} catch (Exception e) {
-			Log.e("err",e.getMessage(),e);
-		}
-		return addressData;
-	}
+    private void sendMail(AddressPojo addressData, Order order,String userEmailAddress,String[] config) {
 
 
+        try {
+            Log.e("eee", "start sending mail");
+
+            GMailSender sender = new GMailSender(config[0],config[1]);
+            sender.sendMail(
+                    "Your Order Detail",
+                    getEmailBody(addressData, order),
+                    "freshvegbox@gmail.com",
+                    userEmailAddress);
+
+        } catch (Exception e) {
+            Log.e("MailApp", "Could not send email", e);
+        }
+
+    }
+
+    String getEmailBody(AddressPojo addressData, Order order) {
+
+        String pr = "";
+        String prdHtml = loadProductFromAsset();
+        for (Product p : products) {
+            String productHtml = prdHtml;
+
+            productHtml = productHtml.replace("#productname#", "" + p.getProductName());
+            productHtml = productHtml.replace("#qty#", "" + p.getProductQuantity());
+            productHtml = productHtml.replace("#prdprice#", "" + VegUtils.getSubTotal(p.getProductPrice(),
+                    p.getProductQuantity()));
+            productHtml = productHtml.replace("#wgt#", "" + p.getWgt());
+            pr = pr + productHtml;
+        }
+        String body = "";
+
+        body = loadOrderConfirmationFromAsset();
+
+        body = body.replace("#orderno#", "" + order.getOrderId());
+        body = body.replace("#orderdate#", "" + order.getOrderDate());
+        body = body.replaceAll("#total#", "" + order.getOrderTotal());
+
+        body = body.replace("#fullname#", "" + addressData.getName());
+        body = body.replace("#address1#", "" + addressData.getFlat());
+        body = body.replace("#address2#", "" + addressData.getColony());
+        body = body.replace("#city#",
+                "" + addressData.getCity() + " " + addressData.getPincode());
+        body = body.replace("#phone#", "" + addressData.getMobile());
+        body = body.replace("#productlist#", pr);
+
+        return body;
+
+    }
 
 
-	public String loadOrderConfirmationFromAsset() {
-		String json = null;
-		try {
-			InputStream is = PaymentActivity.this.getAssets().open("orderConfirmation.html");
-			int size = is.available();
-			byte[] buffer = new byte[size];
-			is.read(buffer);
-			is.close();
-			json = new String(buffer, "UTF-8");
+    AddressPojo getAddressData(String addressId) {
+        AddressPojo addressData = new AddressPojo();
+        String userData = sharedPreferences.getString("userData", null);
+        try {
+            JSONObject resp = new JSONObject(userData);
 
-			//System.out.println(json);
-		} catch (IOException ex) {
-			Log.e("OrderFromAsset ", ex.toString());
-			ex.printStackTrace();
-			return null;
-		}
-		return json;
-	}
-	
-	
-	public String loadProductFromAsset() {
-		String json = null;
-		try {
-			InputStream is = PaymentActivity.this.getAssets().open("product.html");
-			int size = is.available();
-			byte[] buffer = new byte[size];
-			is.read(buffer);
-			is.close();
-			json = new String(buffer, "UTF-8");
+            if (resp.has("address")) {
+                JSONObject address = (JSONObject) resp.get("address");
+                Iterator<String> keys = address.keys();
 
-			//System.out.println(json);
-		} catch (IOException ex) {
-			Log.e("productFromAssets", ex.toString());
-			ex.printStackTrace();
-			return null;
-		}
-		return json;
-	}
+                while (keys.hasNext()) {
+                    // System.out.println(keys.next());
+                    String addId = keys.next();
+
+                    if (addId.equals(addressId)) {
+                        JSONObject addr = (JSONObject) address.get(addressId);
+                        addressData.setName(addr.getString("fullName"));
+                        addressData.setFlat(addr.getString("address1"));
+                        addressData.setColony(addr.getString("address2"));
+                        addressData.setCity(addr.getString("city"));
+                        addressData.setPincode(addr.getString("pincode"));
+                        addressData.setMobile(addr.getString("mobileNumber"));
+
+                    }
+
+                }
+            }
+        } catch (Exception e) {
+            Log.e("err", e.getMessage(), e);
+        }
+        return addressData;
+    }
+
+
+    public String loadOrderConfirmationFromAsset() {
+        String json = null;
+        try {
+            InputStream is = PaymentActivity.this.getAssets().open("orderConfirmation.html");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+
+        } catch (IOException ex) {
+            Log.e("OrderFromAsset ", ex.toString());
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+
+    public String loadProductFromAsset() {
+        String json = null;
+        try {
+            InputStream is = PaymentActivity.this.getAssets().open("product.html");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            Log.e("productFromAssets", ex.toString());
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
 }

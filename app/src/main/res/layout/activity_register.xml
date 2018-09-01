@@ -41,25 +41,27 @@
             android:hint="Last Name"
             android:maxLength="20"
             android:inputType="textEmailAddress"/>
+
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#FFFFFF"
-            android:textColor="#FFFFFF"
             android:hint="Email id"
-            android:maxLength="20"
+            android:inputType="textEmailAddress"
+            android:maxLength="40"
+            android:textColor="#FFFFFF"
 
-            android:inputType="textEmailAddress"/>
+            android:textColorHint="#FFFFFF" />
+
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="#FFFFFF"
-            android:textColor="#FFFFFF"
             android:hint="Password"
-            android:maxLength="15"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:maxLength="25"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

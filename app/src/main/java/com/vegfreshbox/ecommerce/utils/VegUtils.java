@@ -39,7 +39,7 @@ public class VegUtils {
 		} catch (Exception e) {
 			Log.i("parsing wgt", "failed");
 		}
-		return "" + weigth + "" + mesure;
+		return "" + weigth + " " + mesure;
 	}
 
 	public  static String getWeightDec(String weightText, int qty) {

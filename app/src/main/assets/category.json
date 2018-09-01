@@ -524,7 +524,7 @@
 			"id": "25",
 			"name": "Leafy Vegetables கீரை வகைகள்",
 			"image": "https://images.pexels.com/photos/1213859/pexels-photo-1213859.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
-			
+			"imageLocal":"leafy.png",
 			"products": [{
 					"id": "201",
 					"name": "Agathi Keerai அகத்தி கீரை",

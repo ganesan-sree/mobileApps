@@ -100,8 +100,10 @@ public class HomeActivity extends AppCompatActivity implements
 				}
 				// Get new Instance ID token
 				String token = task.getResult().getToken();
-				// Log and toast
-				//String msg = getString(R.string.msg_token_fmt, token);
+				SharedPreferences sharedPreferences = getSharedPreferences("token", MODE_PRIVATE);
+				SharedPreferences.Editor editor = sharedPreferences.edit();
+				editor.putString("token",token);
+				editor.commit();
 				Log.d(TAG, token);
 				
 			}
@@ -212,9 +214,10 @@ public class HomeActivity extends AppCompatActivity implements
 		} else if (id == R.id.nav_order) {
 			Intent i = new Intent(HomeActivity.this, OrderHistory.class);
 			startActivity(i);
-
 		}
-		 else if (id == R.id.nav_send) { SharedPreferences sharedPreferences =
+		 else if (id == R.id.nav_send) {
+
+			SharedPreferences sharedPreferences =
 		  getSharedPreferences("loginstate", MODE_PRIVATE);
 		  SharedPreferences.Editor editor = sharedPreferences.edit();
 		  editor.putString("islogin", "");
@@ -264,14 +267,9 @@ public class HomeActivity extends AppCompatActivity implements
 
 	@Override
 	protected void onResume() {
-
 		super.onResume();
-
 		countproductoncart = DatabaseUtil.getCartCount(HomeActivity.this);
-
-		invalidateOptionsMenu();
-
-
+	//	invalidateOptionsMenu();
 	}
 
 
