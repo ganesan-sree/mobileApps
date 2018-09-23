@@ -146,17 +146,10 @@ private String mailhost = "smtp.gmail.com";
  
  
     public void addAttachment(String filename) throws Exception {
- 
         BodyPart messageBodyPart = new MimeBodyPart();
- 
         DataSource source = new FileDataSource(filename);
- 
         messageBodyPart.setDataHandler(new DataHandler(source));
- 
         messageBodyPart.setFileName("download image");
-
-
-
         _multipart.addBodyPart(messageBodyPart);
  
     }
@@ -174,13 +167,9 @@ private String mailhost = "smtp.gmail.com";
  
  
         public ByteArrayDataSource(byte[] data, String type) {
- 
             super();
- 
             this.data = data;
- 
             this.type = type;
- 
         }
  
  
@@ -220,17 +209,13 @@ private String mailhost = "smtp.gmail.com";
  
  
         public InputStream getInputStream() throws IOException {
- 
             return new ByteArrayInputStream(data);
- 
         }
  
  
  
         public String getName() {
- 
             return "ByteArrayDataSource";
- 
         }
  
  

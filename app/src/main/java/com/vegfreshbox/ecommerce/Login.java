@@ -136,7 +136,7 @@ public class Login extends AppCompatActivity {
                 }
                 
                 editor.commit();
-                Intent intent=new Intent(Login.this,HomeActivity.class);
+                Intent intent=new Intent(Login.this,CartActivity.class);
                 finish();
                 startActivity(intent);
             }else{

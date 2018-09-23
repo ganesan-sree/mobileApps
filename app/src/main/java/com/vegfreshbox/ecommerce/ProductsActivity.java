@@ -65,7 +65,6 @@ public class ProductsActivity extends AppCompatActivity {
 			setTitle(title);
 		}
 
-		// lv = (ListView)findViewById(R.id.product_list);
 
 		mProgressDialog = new ProgressDialog(ProductsActivity.this);
 
@@ -79,10 +78,7 @@ public class ProductsActivity extends AppCompatActivity {
 		LinearLayoutManager horizontalLayoutManagaer = new LinearLayoutManager(
 				ProductsActivity.this, LinearLayoutManager.HORIZONTAL, false);
 		horizontal_recycler_view.setLayoutManager(horizontalLayoutManagaer);
-		// horizontal_recycler_view.setAdapter(horizontalAdapter);
-		// Map<String, String> parameterData = new HashMap<>();
-		// jsonObjectRequest2("http://ecommerceadmin.learnrip.com/Json/list_sub_categories/"+id,
-		// parameterData);
+
 
 		Categorys cate = new Categorys(ProductsActivity.this);
 		// SubcategoriesAdapter adapter = new SubcategoriesAdapter(null);
@@ -104,17 +100,6 @@ public class ProductsActivity extends AppCompatActivity {
 				.getIcon();
 		// mSearchMenu = (MenuItem) menu.findItem(R.id.action_search);
 		cart = (MenuItem) menu.findItem(R.id.action_cart);
-		// mSearchMenu.setOnMenuItemClickListener(new
-		// MenuItem.OnMenuItemClickListener() {
-		// @Override
-		// public boolean onMenuItemClick(MenuItem item) {
-		// Toast.makeText(ProductsActivity.this,"Search Click",Toast.LENGTH_LONG).show();
-		// Intent i=new Intent(ProductsActivity.this,SearchActivity.class);
-		// finish();
-		// startActivity(i);
-		// return false;
-		// }
-		// / });
 
 		cart.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
 			@Override
@@ -127,17 +112,14 @@ public class ProductsActivity extends AppCompatActivity {
 			}
 		});
 
-		// setBadgeCount(this, mCartMenuIcon, String.valueOf(mCartCount++));
-		// GET PRODUCT COUNT ON CART ICON
+
 		MyCart myCartdb = new MyCart(ProductsActivity.this);
 		myCartdb.open();
 		HomeActivity.countproductoncart = myCartdb.countproduct();
 
 		Log.e("CART Count", String.valueOf(HomeActivity.countproductoncart));
 		myCartdb.close();
-		// END
-		// SharedPreferences prefs =
-		// PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
 		setBadgeCount(this, mCartMenuIcon,
 				String.valueOf(HomeActivity.countproductoncart));
 		return super.onCreateOptionsMenu(menu);
@@ -163,9 +145,6 @@ public class ProductsActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
 		// noinspection SimplifiableIfStatement
@@ -200,7 +179,6 @@ public class ProductsActivity extends AppCompatActivity {
 			e.printStackTrace();
 		}
 
-		// Log.e("Helllo",""+output);
 		return output;
 
 	}

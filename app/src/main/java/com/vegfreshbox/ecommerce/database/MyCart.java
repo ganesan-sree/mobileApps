@@ -18,7 +18,7 @@ public class MyCart {
     final static String DATABASE_CREATE = "create table product_list(id integer primary key autoincrement,"
             + "productid text,productname text,productimage text,imagelocal text,productprice text,productwgt text,productquantity text)";
     SQLiteDatabase db;
-    final DatabaseHelper dbHelper;
+    DatabaseHelper dbHelper;
     final Context context;
 
     public MyCart(Context con) {
@@ -28,6 +28,7 @@ public class MyCart {
 
     public void open() {
         if (dbHelper != null) {
+            dbHelper = new DatabaseHelper(context);
             db = dbHelper.getWritableDatabase();
         }
     }

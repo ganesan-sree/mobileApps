@@ -72,7 +72,7 @@ public class OrderHistoryDetailsAdapter extends ArrayAdapter<ProductPojo> {
        holder.product_list_name.setText(contactlist.get(position).getName().toString());
        
        holder.price.setText(VegUtils.getSubTotal(contactlist.get(position).getPrice(),contactlist.get(position).getQuantity()));
-        holder.productQuantity.setText(contactlist.get(position).getQuantity());
+       // holder.productQuantity.setText(contactlist.get(position).getQuantity());
         holder.wgt.setText(contactlist.get(position).getWgt());
     
 

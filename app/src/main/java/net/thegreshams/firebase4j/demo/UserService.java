@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,7 +46,7 @@ public class UserService {
         // "PUT" (test-map into the fb4jDemo-root)
 
         // createUser("test","name","ab@b.com","12345678");
-        // isEmailAvailble("ab@b.com");
+         isEmailAvailble("ab@b.com");
         // createNewAddress("1988256483", "17,Nethaji Avenue main road", "
         // Nerkundram", "Chennai", "600107");
 //		Product p1 = new Product();
@@ -70,7 +71,7 @@ public class UserService {
 
         //System.out.println(getUserById("1988256483"));
 
-        isCredentialValid("ab@b.com", "12345678");
+        isCredentialValid("ganesan186@gmail.com", "1234");
         // firebase.addQuery("orderBy", "\"email\"");
         // firebase.addQuery("equalTo", "\"a1@b.com\"");
         //
@@ -81,7 +82,7 @@ public class UserService {
 
     }
 
-    public static FirebaseResponse createUser(String firstName, String lastName, String email, String password,String token) {
+    public static FirebaseResponse createUser(String firstName, String lastName, String email, String password, String token) {
 
         FirebaseResponse response = null;
         String generatedString = getCurrentTime();
@@ -149,7 +150,7 @@ public class UserService {
 
     public static String isCredentialValid(String email, String password) {
 
-        Log.e("Login in ", "email=" + email + "Passord=" + password);
+//        Log.e("Login in ", "email=" + email + "Passord=" + password);
         String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/users/";
         String userId = null;
         FirebaseResponse response = null;
@@ -160,7 +161,7 @@ public class UserService {
             firebase.addQuery("equalTo", "\"" + email + "\"");
 
             response = firebase.get();
-            Log.e("Login call code ", "" + response.getCode());
+        //    Log.e("Login call code ", "" + response.getCode());
             if (response.getRawBody() != null) {
 
                 JSONObject resp = new JSONObject(response.getRawBody());
@@ -170,7 +171,7 @@ public class UserService {
                 while (keys.hasNext()) {
                     //System.out.println(keys.next());
                     userId = keys.next();
-                    Log.e("Login call userId====", userId);
+                   // Log.e("Login call userId====", userId);
                     System.out.println(userId);
                     JSONObject user = (JSONObject) resp.get(userId);
                     System.out.println(user.get("email"));
@@ -183,11 +184,11 @@ public class UserService {
             }
 
         } catch (FirebaseException | UnsupportedEncodingException | JSONException e) {
-            Log.e("Login call error ", e.getMessage());
+        //    Log.e("Login call error ", e.getMessage());
 
             return userId;
         }
-        Log.e("Login call response====", "\n\nResult of Check User credentilas:\n" + response);
+      //  Log.e("Login call response====", "\n\nResult of Check User credentilas:\n" + response);
 
         System.out.println("\n\nResult of Check User credentilas:\n" + response);
         return userId;
@@ -281,13 +282,13 @@ public class UserService {
 
     private static String getWeek() {
         Date d1 = new Date();
-        Calendar cl = Calendar. getInstance();
+        Calendar cl = Calendar.getInstance();
         cl.setTime(d1);
         return "Week" + cl.get(Calendar.WEEK_OF_YEAR);
     }
 
     public static Order createUserOrder(String userId, String orderAmt, List<Product> products,
-                                       String deliveryAddress) {
+                                        String deliveryAddress) {
         Order order = null;
 
         String date = getCurrentDate();
@@ -332,40 +333,41 @@ public class UserService {
 
 
     public static boolean createNewOrder(String userId, String orderAmt, List<Product> products,
-                                       String deliveryAddress,String orderId) {
+                                         String deliveryAddress, String orderId) {
         String date = getCurrentDate();
         FirebaseResponse response = null;
-        String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/orders/"+getWeek()+"/"+orderId;
+        String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/orders/" + getWeek() + "/" + orderId;
         Firebase firebase;
         try {
             firebase = new Firebase(firebase_baseUrl);
 
-        StringBuffer product = new StringBuffer();
+            StringBuffer product = new StringBuffer();
             Map<String, Object> orderMap = new LinkedHashMap<String, Object>();
 
-            orderMap.put("orderId", date);
+            orderMap.put("orderId", orderId);
             orderMap.put("orderAmt", orderAmt);
             orderMap.put("deliveryAddress", deliveryAddress);
             orderMap.put("orderDate", date);
-           for(Product pro:products){
-              String productName = pro.getProductName().replaceAll("[^a-zA-Z0-9]", "");
-               System.out.println(productName);
-               product.append(productName+" "+pro.getWgt());
-              // product.append("\\r\\n");
-           // orderMap.put("products", products);
-              // orderMap.put("productname", pro.getProductName());
-               // orderMap.put("productwgt", pro.getWgt());
-              //  orderMap.put("productQty", pro.getProductQuantity());
-             //   orderMap.put("productPrice", pro.getSubTotal());
-
+            int i = 0;
+            for (Product pro : products) {
+                i = i + 1;
+                String productName = pro.getProductName().replaceAll("[^a-zA-Z0-9]", "");
+                System.out.println(productName);
+                //product.append(productName+" "+pro.getWgt()+" ");
+                // product.append("\\r\\n");
+                // orderMap.put("products", products);
+                // orderMap.put("productname", pro.getProductName());
+                // orderMap.put("productwgt", pro.getWgt());
+                //  orderMap.put("productQty", pro.getProductQuantity());
+                //   orderMap.put("productPrice", pro.getSubTotal());
+                orderMap.put("products" + i, productName + " " + pro.getWgt() + " ");
 
             }
-             orderMap.put("products", product);
+
             response = firebase.patch(orderMap);
 
 
             response = firebase.get();
-
 
 
             System.out.println("\n\nResult of get order details\n" + response);
@@ -425,30 +427,36 @@ public class UserService {
     }
 
 
-    static public String[] getConfig() {
+    static public Map<String, Object> getConfig() {
 
         String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/config";
         Firebase firebase;
         FirebaseResponse response = null;
-        String[] crr= new String[2];
+        Map<String, Object> configMap = new HashMap<>();
         try {
             firebase = new Firebase(firebase_baseUrl);
             response = firebase.get();
             JSONObject config = new JSONObject(response.getRawBody());
-            Log.e("", "has email===" + config.has("mailEmail"));
-                if (config != null && config.has("mailEmail")) {
-                    crr[0] = (String) config.get("mailEmail");
-                }
-            Log.e("", "has email===" + config.has("mailPassword"));
-                if (config != null && config.has("mailPassword")) {
-                    crr[1] = (String) config.get("mailPassword");
+            //Log.e("", "has email===" + config.has("gmailEmail"));
+            if (config != null && config.has("gmailEmail")) {
+                configMap.put("gmailEmail",config.get("gmailEmail"));
+            }
+            //Log.e("", "has email===" + config.has("gmailPassword"));
+            if (config != null && config.has("gmailPassword")) {
 
+                configMap.put("gmailPassword", config.get("gmailPassword"));
+            }
+            if (config != null && config.has("cansendmail")) {
+                configMap.put("cansendmail",config.get("cansendmail"));
+            }
+            if (config != null && config.has("cancreateorder")) {
+                configMap.put("cancreateorder",config.get("cancreateorder"));
             }
         } catch (FirebaseException | UnsupportedEncodingException | JSONException e) {
             LOGGER.error(e);
         }
         System.out.println("\n\nResult of Config\n" + response);
-        return crr;
+        return configMap;
 
     }
 

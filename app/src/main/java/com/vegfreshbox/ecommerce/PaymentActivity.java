@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -154,15 +155,11 @@ public class PaymentActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             mProgressDialog.show();
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.loading));
-
             Log.e("Hi", "Connecting firebase for order create");
-
             addressData = getAddressData(addressid);
-
         }
 
         @Override
@@ -173,14 +170,12 @@ public class PaymentActivity extends AppCompatActivity {
 
             try {
 
-                if (userId != null) {
+                final Map<String, Object> config = userService.getConfig();
 
+                if (userId != null) {
 
                     order = userService.createUserOrder(userId,
                             String.valueOf(totalpay), products, addressData.toString());
-
-                    userService.createNewOrder(userId,
-                            String.valueOf(totalpay), products, addressData.toString(),order.getOrderId());
 
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     FirebaseResponse res = userService.getUserById(userId);
@@ -188,23 +183,24 @@ public class PaymentActivity extends AppCompatActivity {
                     if (userData != null) {
                         editor.putString("userData", userData);
                     }
-
                     editor.commit();
 
-                    Thread thread = new Thread() {
-                        public void run() {
-                           String[] con= userService.getConfig();
-                            Log.e("Email Address to sent",userService.getEmailAddress(userData));
-                            Log.e("Email Address to email",""+con[0]+"  "+con[1]);
-                            sendMail(addressData, order,userService.getEmailAddress(userData),con);
+                    if (config.get("cancreateorder") != null && (Boolean) config.get("cancreateorder")) {
+                        userService.createNewOrder(userId,
+                                String.valueOf(totalpay), products, addressData.toString(), order.getOrderId());
+                    }
+                    Log.e("can Send mail", ""+ config.get("cansendmail"));
+                    if ((Boolean) config.get("cansendmail")) {
+                        Thread thread = new Thread() {
+                            public void run() {
+                                Log.e("Email Address to sent", userService.getEmailAddress(userData));
+                                Log.e("Email Address to email", "" + config.get("gmailEmail") + "  " + config.get("gmailPassword") + " " + config.get("cansendmail"));
+                                sendMail(addressData, order, userService.getEmailAddress(userData), config);
                         }
-                    };
-
+                    } ;
                     thread.start();
-
-
                 }
-
+            }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -258,13 +254,13 @@ public class PaymentActivity extends AppCompatActivity {
         }
     }
 
-    private void sendMail(AddressPojo addressData, Order order,String userEmailAddress,String[] config) {
+    private void sendMail(AddressPojo addressData, Order order,String userEmailAddress, Map<String, Object> config) {
 
 
         try {
             Log.e("eee", "start sending mail");
 
-            GMailSender sender = new GMailSender(config[0],config[1]);
+            GMailSender sender = new GMailSender((String) config.get("gmailEmail"),(String) config.get("gmailPassword"));
             sender.sendMail(
                     "Your Order Detail",
                     getEmailBody(addressData, order),

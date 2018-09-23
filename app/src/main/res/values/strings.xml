@@ -13,9 +13,10 @@
     <string name="loading">Please wait.</string>
     <string name="currency">INR :  </string>
     <string name="wgt">wgt :  </string>
-	 <string name="help_support">Help \u0026 Support</string>
+    <string name="help_support">Help \u0026 Support</string>
     <string name="contact_us">Contact Us</string>
-    <string name="terms_conditions">Terms \u0026 Conditions</string>
+    <string name="writetous">Write to Us</string>
     <string name="help_center">Help Center</string>
-
+    <string name="title_activity_about_us">AboutUs</string>
+    <string name="copy_right" translatable="false">Copyrights © %1$d</string>
 </resources>

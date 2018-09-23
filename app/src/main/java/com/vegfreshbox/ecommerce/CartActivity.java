@@ -113,16 +113,10 @@ public class CartActivity extends AppCompatActivity {
         total=0;
         if (c.moveToFirst()) {
             do {
-
-//                int i=Integer.parseInt(c.getString(6));
-
                 total+= (Double.parseDouble(c.getString(5)))*Integer.parseInt(c.getString(7));
-
             } while (c.moveToNext());
         }
         totalprice.setText("INR "+String.valueOf(total));
-
-
         mycartdb.close();
     }
 
