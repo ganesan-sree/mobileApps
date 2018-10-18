@@ -124,7 +124,7 @@ public class StorageHandler {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 // taskSnapshot.getMetadata() contains file metadata such as size,
                 // content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                Uri downloadUrl = taskSnapshot.getUploadSessionUri();
                 Log.d(TAG, "addOnFailureListener.onSuccess - downloadUrl: " + downloadUrl);
 
                 callback.onUploadSuccess(uuid, downloadUrl, type);

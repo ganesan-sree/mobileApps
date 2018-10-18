@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.vegfreshbox.ecommerce">
+    package="com.vegfreshbox.ecommerce"
+
+    >
 
     <!-- if you want to load images from the internet -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,17 +19,23 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!--
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_logo" />
+            -->
         <!--
              Set color used with incoming notification messages. This is used when 
 			no color is set for the incoming notification message. See README(https://goo.gl/6BKBk7) 
 			for more.
         -->
+        <!--
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
+-->
+
 
         <activity
             android:name=".HomeActivity"

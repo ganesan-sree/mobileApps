@@ -7,8 +7,8 @@ def computeVersionName() {
 }
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 26
+    buildToolsVersion '28.0.3'
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 26
@@ -34,9 +34,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // android framework
-    implementation 'com.android.support:appcompat-v7:27.0.2'
-    implementation 'com.android.support:design:27.0.2'
-    implementation 'com.android.support:cardview-v7:27.0.2'
+    implementation 'com.android.support:appcompat-v7:26.0.0'
+    implementation 'com.android.support:design:26.0.0'
+    implementation 'com.android.support:cardview-v7:26.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // firebase sdk
@@ -46,7 +46,7 @@ dependencies {
    // implementation 'com.google.firebase:firebase-crash:11.8.0'
   //  implementation 'com.google.firebase:firebase-messaging:11.8.0'
   //  implementation 'com.google.firebase:firebase-auth:11.8.0'
-  //  implementation 'com.google.firebase:firebase-firestore:11.8.0'
+   // implementation 'com.google.firebase:firebase-firestore:17.1.1'
 
 
     implementation 'com.google.firebase:firebase-core:16.0.1'
@@ -55,7 +55,8 @@ dependencies {
     implementation "com.google.firebase:firebase-crash:16.0.1"
     implementation "com.google.firebase:firebase-auth:16.0.1"
     implementation "com.google.firebase:firebase-messaging:17.3.0"
-    implementation 'com.google.firebase:firebase-firestore:17.1.1'
+    implementation 'com.google.firebase:firebase-firestore:11.8.0'
+
 
 //    compile 'com.firebaseui:firebase-ui:2.3.0'
 
@@ -63,7 +64,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.7.0'
 
 //    implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
-    implementation 'org.apache.httpcomponents:httpcore:4.3'
+   // implementation 'org.apache.httpcomponents:httpcore:4.3'
 
     // send message panel
     implementation 'com.vanniktech:emoji-ios:0.5.1'
@@ -86,16 +87,16 @@ configurations.all {
         // source : https://stackoverflow.com/questions/43280871/android-getting-manifest-merger-failed-error-after-update-to-new-version-of-grad
         if (requested.group == 'com.android.support') {
             if (!requested.name.startsWith("multidex")) {
-                details.useVersion '26.1.0'
-            }
+                details.useVersion '26.0.0'
+           }
         }
 
         // firebase resolution
         // source : https://github.com/firebase/FirebaseUI-Android/issues/218
-        if (details.requested.group == 'com.google.firebase' ||
-                details.requested.group == 'com.google.android.gms') {
-            details.useVersion '16.0.1'
-        }
+//        if (details.requested.group == 'com.google.firebase' ||
+//                details.requested.group == 'com.google.android.gms') {
+//            details.useVersion '16.0.1'
+//        }
     }
 }
 
