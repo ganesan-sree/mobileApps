@@ -117,7 +117,7 @@ public class CheckoutActivity extends AppCompatActivity {
         if(userId !=null) {
 			new FireBaseService().execute("");
 		}
-       // jsonObjectRequest2("http://ecommerceadmin.learnrip.com/Json/useraddress/", parameterData);
+
 
     }
     @Override
@@ -126,71 +126,7 @@ public class CheckoutActivity extends AppCompatActivity {
         return true;
     }
 
-//    public void jsonObjectRequest2(String url, final Map<String, String> params) {
-//        try {
-//            mProgressDialog.show();
-//            mProgressDialog.setCancelable(false);
-//            mProgressDialog.setMessage(getString(R.string.loading));
-//            Response.Listener<JSONObject> reponseListener = new Response.Listener<JSONObject>() {
-//                @Override
-//                public void onResponse(JSONObject jsonObject) {
-//                    processJsonObject2(jsonObject);
-//                    if(mProgressDialog!=null) {
-//                        mProgressDialog.dismiss();
-//                    }
-//                }
-//            };
-//            Response.ErrorListener errorListener = new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError volleyError) {
-//                    //Toast.makeText(getActivity(), "error==>  " + volleyError.toString(), Toast.LENGTH_LONG).show();
-//                    if(mProgressDialog!=null) {
-//                        mProgressDialog.dismiss();
-//                    }
-//                }
-//            };
-//            CustomRequest jsObjRequest = new CustomRequest(Request.Method.POST, url, params, reponseListener, errorListener);
-//            RequestQueue requestQueue = Volley.newRequestQueue(CheckoutActivity.this);
-//            requestQueue.add(jsObjRequest);
-//        } catch (Exception e) {
-//            VolleyLog.d("RESPONSE ERROR", e.toString());
-//            if(mProgressDialog!=null) {
-//                mProgressDialog.dismiss();
-//            }
-//        }
-//    }
-//    private void processJsonObject2(JSONObject response) {
-//        if (response != null) {
-//            Log.e("==RESPONSE ERROR=", response.toString());
-//            try {
-//                JSONArray jsonArray2 = response.getJSONArray("address");
-//                productPojoArrayList=new ArrayList<AddressPojo>();
-//                for (int i=0; i<jsonArray2.length(); i++){
-//                    JSONObject jsonObject=jsonArray2.getJSONObject(i);
-//
-//                    AddressPojo addressPojo=new AddressPojo();
-//                    addressPojo.setId(jsonObject.getString("id"));
-//                    addressPojo.setName(jsonObject.getString("name"));
-//                    addressPojo.setMobile(jsonObject.getString("mobile"));
-//                    addressPojo.setPincode(jsonObject.getString("pincode"));
-//                    addressPojo.setFlat(jsonObject.getString("flat"));
-//                    addressPojo.setColony(jsonObject.getString("colony"));
-//
-//
-//
-//
-//                    Log.e("JSON TEST",jsonObject.getString("id"));
-//
-//                    productPojoArrayList.add(addressPojo);
-//                }
-//
-//                
-//            }catch (Exception e){
-//
-//            }
-//
-//        }
-//    }
+
     
     @Override
 	protected void onStop() {

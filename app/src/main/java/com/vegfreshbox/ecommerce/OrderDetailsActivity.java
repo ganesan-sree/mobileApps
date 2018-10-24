@@ -13,16 +13,22 @@ import com.vegfreshbox.ecommerce.adapter.OrderHistoryDetailsAdapter;
 import com.vegfreshbox.ecommerce.pojo.OrderHistoryProductsDetailsPojo;
 import com.vegfreshbox.ecommerce.pojo.ProductPojo;
 
+import net.thegreshams.firebase4j.demo.Order;
+import net.thegreshams.firebase4j.demo.Product;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class OrderDetailsActivity extends AppCompatActivity {
 
     ListView orderhistoryproductslist;
     String id;
+    String orderStr;
+    Order orderObj;
     OrderHistoryDetailsAdapter orderHistoryDetailsAdapter;
     ArrayList<OrderHistoryProductsDetailsPojo> orderHistoryProductsDetailsPojoArrayList;
     private ProgressDialog mProgressDialog;
@@ -45,15 +51,16 @@ public class OrderDetailsActivity extends AppCompatActivity {
         Bundle bd = intent.getExtras();
         if (bd != null) {
             id = (String) bd.get("id");
+            orderStr=bd.getString("orderStr");
+            orderObj = (Order) bd.get("order");
         }
         try {
-            SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
-            String userData = sharedPreferences.getString("userData", null);
-            orderHistoryProductsDetailsPojoArrayList = new ArrayList<OrderHistoryProductsDetailsPojo>();
-            JSONObject resp = new JSONObject(userData);
 
-            if (resp.has("orders")) {
-                JSONObject orders = (JSONObject) resp.get("orders");
+            orderHistoryProductsDetailsPojoArrayList = new ArrayList<OrderHistoryProductsDetailsPojo>();
+
+
+            if (orderStr !=null) {
+                JSONObject orders = new JSONObject(orderStr);
                 Iterator<String> keys = orders.keys();
 
                 while (keys.hasNext()) {
@@ -63,9 +70,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
                     JSONObject order = (JSONObject) orders.get(orderId);
 
                     if(orderId.equals(id)) {
-
-
-
 
                         orderHistoryProductsDetailsPojo.setId(orderId);
                         orderHistoryProductsDetailsPojo.setDeliveryAddress(order.getString("deliveryAddress"));
@@ -94,7 +98,39 @@ public class OrderDetailsActivity extends AppCompatActivity {
                         
                         break;
                     }
+
+
+
                 }
+            }
+
+
+            if(orderObj !=null){
+
+                orderHistoryProductsDetailsPojo.setId(orderObj.getOrderId());
+                orderHistoryProductsDetailsPojo.setDeliveryAddress(orderObj.getDeliveryAddress());
+                orderHistoryProductsDetailsPojo.setTotal(orderObj.getOrderTotal());
+                orderHistoryProductsDetailsPojo.setOrderDate(orderObj.getOrderDate());
+
+                List<Product> products= orderObj.getProducts();
+
+                for (int i = 0, size = products.size(); i < size; i++) {
+                    Product objectInArray = products.get(i);
+                    ProductPojo pr= new ProductPojo();
+                    pr.setId((String)objectInArray.getProductId());
+                    pr.setQuantity((String)objectInArray.getProductQuantity());
+                    pr.setName((String)objectInArray.getProductName());
+                    pr.setPrice((String)objectInArray.getProductPrice());
+                    pr.setImage((String)objectInArray.getProductImage());
+                    pr.setWgt((String)objectInArray.getWgt());
+                    if(objectInArray.getImagelocal() !=null){
+                        pr.setImagelocal((String)objectInArray.getImagelocal());
+                    }
+
+                    orderHistoryProductsDetailsPojo.getProducts().add(pr);
+                    //  System.out.println(objectInArray.get("productName"));
+                }
+
             }
 
 

@@ -280,6 +280,12 @@ public class UserService {
         return "1" + formatter.format(date);
     }
 
+    private static String getOrderId() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date();
+        return "1" + formatter.format(date);
+    }
+
     private static String getWeek() {
         Date d1 = new Date();
         Calendar cl = Calendar.getInstance();
@@ -332,42 +338,59 @@ public class UserService {
     }
 
 
-    public static boolean createNewOrder(String userId, String orderAmt, List<Product> products,
-                                         String deliveryAddress, String orderId) {
-        String date = getCurrentDate();
+    public static String getUserOrder(String userId) {
+        String orders = null;
+
         FirebaseResponse response = null;
-        String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/orders/" + getWeek() + "/" + orderId;
+        String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/orders/" + userId;
+        Firebase firebase;
+        try {
+            firebase = new Firebase(firebase_baseUrl);
+            response = firebase.get();
+            orders=response.getRawBody();
+            System.out.println("\n\nResult of get order details\n" + response);
+        } catch (FirebaseException | UnsupportedEncodingException e) {
+            LOGGER.error(e);
+            Log.e("Error", e.getMessage(), e);
+
+        }
+
+        System.out.println("\n\nResult of orders\n" + response);
+        return orders;
+
+    }
+
+
+    public static Order createNewOrder(String uId, String orderAmt, List<Product> products,
+                                         String deliveryAddress) {
+        String date = getCurrentDate();
+        Order order = null;
+        FirebaseResponse response = null;
+        String orderId =getOrderId();
+        String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/orders/" + uId + "/" + orderId;
         Firebase firebase;
         try {
             firebase = new Firebase(firebase_baseUrl);
 
-            StringBuffer product = new StringBuffer();
             Map<String, Object> orderMap = new LinkedHashMap<String, Object>();
 
             orderMap.put("orderId", orderId);
             orderMap.put("orderAmt", orderAmt);
             orderMap.put("deliveryAddress", deliveryAddress);
             orderMap.put("orderDate", date);
-            int i = 0;
-            for (Product pro : products) {
-                i = i + 1;
-                String productName = pro.getProductName().replaceAll("[^a-zA-Z0-9]", "");
-                System.out.println(productName);
-                //product.append(productName+" "+pro.getWgt()+" ");
-                // product.append("\\r\\n");
-                // orderMap.put("products", products);
-                // orderMap.put("productname", pro.getProductName());
-                // orderMap.put("productwgt", pro.getWgt());
-                //  orderMap.put("productQty", pro.getProductQuantity());
-                //   orderMap.put("productPrice", pro.getSubTotal());
-                orderMap.put("products" + i, productName + " " + pro.getWgt() + " ");
+            orderMap.put("products", products);
+            orderMap.put("status", "Placed");
 
-            }
 
             response = firebase.patch(orderMap);
+            order = new Order();
 
-
-            response = firebase.get();
+            order.setOrderDate(date);
+            order.setOrderId(orderId);
+            order.setOrderTotal(orderAmt);
+            order.setProducts(products);
+            order.setDeliveryAddress(deliveryAddress);
+           // response = firebase.get();
 
 
             System.out.println("\n\nResult of get order details\n" + response);
@@ -378,7 +401,7 @@ public class UserService {
         }
 
         System.out.println("\n\nResult of orders\n" + response);
-        return true;
+        return order;
 
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,12 +18,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.flags.impl.DataUtils;
@@ -30,17 +34,29 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.vegfreshbox.ecommerce.adapter.HomeCategoryAdapter;
+import com.vegfreshbox.ecommerce.chat.SplashActivity;
 import com.vegfreshbox.ecommerce.database.DatabaseUtil;
 import com.vegfreshbox.ecommerce.products.Categorys;
 import com.vegfreshbox.ecommerce.utils.VegUtils;
 
 import net.thegreshams.firebase4j.demo.UserService;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
+
+import org.chat21.android.core.ChatManager;
+import org.chat21.android.core.users.models.IChatUser;
+import org.chat21.android.ui.ChatUI;
+import org.chat21.android.ui.contacts.activites.ContactListActivity;
+import org.chat21.android.ui.conversations.listeners.OnNewConversationClickListener;
+import org.chat21.android.ui.messages.listeners.OnMessageClickListener;
+import org.chat21.android.utils.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,6 +65,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.chat21.android.core.ChatManager._SERIALIZED_CHAT_CONFIGURATION_LOGGED_USER;
 
 public class HomeActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -236,6 +254,12 @@ public class HomeActivity extends AppCompatActivity implements
             startActivity(i);
         }
 
+     //   else if (id == R.id.writetous) {
+      //     initChatSDK();
+      //      Intent i = new Intent("com.vegfreshbox.ecommerce.chat.SplashActivity");
+      //      startActivity(i);
+      //  }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
@@ -352,6 +376,88 @@ public class HomeActivity extends AppCompatActivity implements
         return true;
     }
 
+    public void initChatSDK() {
+
+        //enable persistence must be made before any other usage of FirebaseDatabase instance.
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        // it creates the chat configurations
+        ChatManager.Configuration mChatConfiguration =
+                new ChatManager.Configuration.Builder(getString(R.string.chat_firebase_appId))
+                        .firebaseUrl(getString(R.string.chat_firebase_url))
+                        .storageBucket(getString(R.string.chat_firebase_storage_bucket))
+                        .build();
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // assuming you have a login, check if the logged user (converted to IChatUser) is valid
+//        if (currentUser != null) {
+        if (currentUser != null) {
+            IChatUser iChatUser = (IChatUser) IOUtils.getObjectFromFile(getBaseContext(),
+                    _SERIALIZED_CHAT_CONFIGURATION_LOGGED_USER);
+
+//            IChatUser iChatUser = new ChatUser();
+//            iChatUser.setId(currentUser.getUid());
+//            iChatUser.setEmail(currentUser.getEmail());
+
+            ChatManager.start(this, mChatConfiguration, iChatUser);
+            Log.i(TAG, "chat has been initialized with success");
+
+//            ChatManager.getInstance().initContactsSyncronizer();
+
+            ChatUI.getInstance().setContext(getBaseContext());
+            ChatUI.getInstance().enableGroups(true);
+
+            ChatUI.getInstance().setOnMessageClickListener(new OnMessageClickListener() {
+                @Override
+                public void onMessageLinkClick(TextView message, ClickableSpan clickableSpan) {
+                    String text = ((URLSpan) clickableSpan).getURL();
+
+                    Uri uri = Uri.parse(text);
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(browserIntent);
+                }
+            });
+
+            // set on new conversation click listener
+//            final IChatUser support = new ChatUser("support", "Chat21 Support");
+            final IChatUser support = null;
+            ChatUI.getInstance().setOnNewConversationClickListener(new OnNewConversationClickListener() {
+                @Override
+                public void onNewConversationClicked() {
+                    if (support != null) {
+                        ChatUI.getInstance().openConversationMessagesActivity(support);
+                    } else {
+                        Intent intent = new Intent(getBaseContext(), ContactListActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // start activity from context
+
+                        startActivity(intent);
+                    }
+                }
+            });
+
+//            // on attach button click listener
+//            ChatUI.getInstance().setOnAttachClickListener(new OnAttachClickListener() {
+//                @Override
+//                public void onAttachClicked(Object object) {
+//                    Toast.makeText(instance, "onAttachClickListener", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//
+//            // on create group button click listener
+//            ChatUI.getInstance().setOnCreateGroupClickListener(new OnCreateGroupClickListener() {
+//                @Override
+//                public void onCreateGroupClicked() {
+//                    Toast.makeText(instance, "setOnCreateGroupClickListener", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+            Log.i(TAG, "ChatUI has been initialized with success");
+
+        } else {
+            Log.w(TAG, "chat can't be initialized because chatUser is null");
+        }
+    }
 
     private class FireBaseService extends AsyncTask<String, Void, String> {
 

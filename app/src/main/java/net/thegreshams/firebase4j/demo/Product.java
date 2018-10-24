@@ -1,6 +1,8 @@
 package net.thegreshams.firebase4j.demo;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
 	
 	public Product(String productId,String productName,String productPrice,String wgt,String productQuantity){
 		this.productId=productId;

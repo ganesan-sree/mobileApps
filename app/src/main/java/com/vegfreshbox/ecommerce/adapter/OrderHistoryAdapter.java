@@ -24,7 +24,15 @@ import java.util.ArrayList;
 
 public class OrderHistoryAdapter extends ArrayAdapter<OrderHistoryPojo> {
 
-    ArrayList<OrderHistoryPojo> contactlist;
+    public ArrayList<OrderHistoryPojo> getOrderlist() {
+        return orderlist;
+    }
+
+    public void setOrderlist(ArrayList<OrderHistoryPojo> orderlist) {
+        this.orderlist = orderlist;
+    }
+
+    ArrayList<OrderHistoryPojo> orderlist;
     LayoutInflater vi;
     int Resource;
     ViewHolder holder;
@@ -39,7 +47,7 @@ public class OrderHistoryAdapter extends ArrayAdapter<OrderHistoryPojo> {
         vi = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Resource = resource;
-        contactlist = objects;
+        orderlist = objects;
 
     }
 
@@ -63,10 +71,10 @@ public class OrderHistoryAdapter extends ArrayAdapter<OrderHistoryPojo> {
         }
 
 
-        holder.date.setText("Order Date  : "+contactlist.get(position).getOrderdate());
-        holder.amount.setText("Order Total : "+contactlist.get(position).getOrderamount());
-        holder.status.setText("Order Status :"+contactlist.get(position).getOrderstatus());
-        holder.orderNo.setText("Order no :"+contactlist.get(position).getId());
+        holder.date.setText("Order Date  : "+orderlist.get(position).getOrderdate());
+        holder.amount.setText("Order Total : "+orderlist.get(position).getOrderamount());
+        holder.status.setText("Order Status :"+orderlist.get(position).getOrderstatus());
+        holder.orderNo.setText("Order no :"+orderlist.get(position).getId());
 
         return v;
 

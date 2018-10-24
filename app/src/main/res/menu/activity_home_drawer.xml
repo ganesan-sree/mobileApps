@@ -22,9 +22,11 @@
             <item
                 android:id="@+id/contact_us"
                 android:title="@string/contact_us" />
+            <!--
             <item
-                android:id="@+id/terms_conditions"
+                android:id="@+id/writetous"
                 android:title="@string/writetous" />
+                -->
         </menu>
     </item>
 

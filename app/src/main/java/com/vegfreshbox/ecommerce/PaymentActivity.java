@@ -52,6 +52,7 @@ public class PaymentActivity extends AppCompatActivity {
     ArrayList<String> productquantity;
     double shippingcharge;
     String userId = null;
+    String userData = null;
     RadioButton paymentcreditradio, codradio;
     String addressid = "1";
     LinearLayout carddetails, codpaymentbutton;
@@ -109,7 +110,7 @@ public class PaymentActivity extends AppCompatActivity {
                 // SET ALL PRODUCTS IN ARRAY
                 Product p = new Product(cursor.getString(1), String.valueOf(cursor.getString(2)),
                         String.valueOf(cursor.getString(5)), String.valueOf(cursor.getString(6)), String.valueOf(cursor.getString(7)));
-                //Log.e("wwwwwwwwwwwww",cursor.getString(4));
+
                 p.setImagelocal(cursor.getString(4));
                 p.setProductImage(cursor.getString(3));
                 products.add(p);
@@ -126,6 +127,7 @@ public class PaymentActivity extends AppCompatActivity {
 
                 if (VegUtils.isOnline(PaymentActivity.this)) {
                     userId = sharedPreferences.getString("userid", null);
+                    userData = sharedPreferences.getString("userData", null);
                     new FireBaseService().execute("");
                 } else {
                     Toast.makeText(PaymentActivity.this, "You are not connected to Internet please go online", Toast.LENGTH_SHORT).show();
@@ -174,21 +176,23 @@ public class PaymentActivity extends AppCompatActivity {
 
                 if (userId != null) {
 
-                    order = userService.createUserOrder(userId,
-                            String.valueOf(totalpay), products, addressData.toString());
+                   // order = userService.createUserOrder(userId,
+                    //        String.valueOf(totalpay), products, addressData.toString());
 
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    FirebaseResponse res = userService.getUserById(userId);
-                    final String userData = res.getRawBody();
-                    if (userData != null) {
-                        editor.putString("userData", userData);
-                    }
-                    editor.commit();
+                   // SharedPreferences.Editor editor = sharedPreferences.edit();
+                    //FirebaseResponse res = userService.getUserById(userId);
+                  //  final String userData = res.getRawBody();
+                  //  if (userData != null) {
+                 //       editor.putString("userData", userData);
+                 //   }
+                 //   editor.commit();
 
-                    if (config.get("cancreateorder") != null && (Boolean) config.get("cancreateorder")) {
-                        userService.createNewOrder(userId,
-                                String.valueOf(totalpay), products, addressData.toString(), order.getOrderId());
-                    }
+                   // if (config.get("cancreateorder") != null && (Boolean) config.get("cancreateorder")) {
+
+                    order=  userService.createNewOrder(userId,
+                                String.valueOf(totalpay), products, addressData.toString());
+
+                  //  }
                     Log.e("can Send mail", ""+ config.get("cansendmail"));
                     if ((Boolean) config.get("cansendmail")) {
                         Thread thread = new Thread() {
@@ -203,7 +207,7 @@ public class PaymentActivity extends AppCompatActivity {
             }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("order", "while placing order", e);
             }
 
             return "Executed!";
@@ -238,13 +242,24 @@ public class PaymentActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),
                 //		"Congrats, Your Order Placed Successfully!",
                 //		Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(),
-                        HomeActivity.class);
 
+
+
+              //  Intent intent = new Intent(getApplicationContext(),
+               //        HomeActivity.class);
+               // startActivity(intent);
+
+
+                Intent intent = new Intent(PaymentActivity.this,
+                        OrderDetailsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                intent.putExtra("order", order);
                 startActivity(intent);
+
                 finish();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("order", "order detials", e);
                 Toast.makeText(getApplicationContext(),
                         "Something went wrong please try again!",
                         Toast.LENGTH_SHORT).show();

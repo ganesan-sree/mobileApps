@@ -19,4 +19,23 @@
     <string name="help_center">Help Center</string>
     <string name="title_activity_about_us">AboutUs</string>
     <string name="copy_right" translatable="false">Copyrights © %1$d</string>
+    <string name="fragment_tab_home_direct_message_button_label">Select a contact</string>
+    <string name="fragment_user_profile_id_label">ID</string>
+    <string name="fragment_user_profile_logout_label">logout</string>
+
+
+    <string name="tag_home" translatable="false">TAB_HOME</string>
+    <string name="tag_chat" translatable="false">TAB_CHAT</string>
+    <string name="tag_profile" translatable="false">TAB_PROFILE</string>
+
+    <string name="tab_home_title" translatable="false">Home</string>
+    <string name="tab_chat_title" translatable="false">Chat</string>
+    <string name="tab_profile_title" translatable="false">Profile</string>
+
+    <!--just uncomment(comment) one of these to display(or not) the relative tab within the adapter-->
+    <string-array name="tab_tags" translatable="false">
+        <item>@string/tag_home</item>
+        <item>@string/tag_chat</item>
+        <item>@string/tag_profile</item>
+    </string-array>
 </resources>
