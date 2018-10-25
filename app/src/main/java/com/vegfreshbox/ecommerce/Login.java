@@ -62,22 +62,9 @@ public class Login extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 new FireBaseService().execute("");
-
             }
         });
-
-//        SharedPreferences sharedPreferences = getSharedPreferences("loginstate", Context.MODE_PRIVATE);
-//        if (sharedPreferences.getString("islogin", "").equals("1")) {
-//            Intent intent=new Intent(Login.this,HomeActivity.class);
-//            this.finish();
-//            startActivity(intent);
-//        } else {
-//
-//
-//
-//        }
     }
 
 
@@ -92,22 +79,16 @@ public class Login extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             mProgressDialog.show();
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.loading));
-
-            Log.e("Hi", "Download Commencing");
-
         }
 
         @Override
         protected String doInBackground(String... params) {
 
-            // mProgressDialog = new ProgressDialog(RegisterActivity.this);
             final UserService userService = new UserService();
-            Log.e("344344", "login started1");
-
+            Log.e("Login", "login started1");
             userId=userService.isCredentialValid(email.getText().toString().trim(),password.getText().toString().trim());
 
 			if (userId != null) {
@@ -116,25 +97,22 @@ public class Login extends AppCompatActivity {
 			}
             
             return "Executed!";
-
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            Log.e("Hi", "Login Done.==" + result);
+            Log.e("Login", "Login process done.==" + result);
 
             if(userId!=null){
                 SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("islogin", "1");
                 editor.putString("userid",userId);
-                
                 if(userData!=null){
                 	editor.putString("userData",userData);
                 }
-                
                 editor.commit();
                 Intent intent=new Intent(Login.this,CartActivity.class);
                 finish();
@@ -142,7 +120,6 @@ public class Login extends AppCompatActivity {
             }else{
                 Toast.makeText(Login.this,"Login Failed",Toast.LENGTH_SHORT).show();
             }
-
             mProgressDialog.dismiss();
 
         }

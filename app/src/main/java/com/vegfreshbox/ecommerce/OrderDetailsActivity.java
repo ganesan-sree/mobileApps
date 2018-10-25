@@ -39,7 +39,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Order Details");
+        getSupportActionBar().setTitle("Your Order Details");
 
         totalprice=(TextView)findViewById(R.id.totalprice);
         deliveryAddress=(TextView)findViewById(R.id.deliveryAddress);

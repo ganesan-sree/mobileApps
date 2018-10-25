@@ -33,7 +33,7 @@ public class AboutUs extends AppCompatActivity {
                 .isRTL(false)
                 .setImage(R.drawable.vegbox)
                 .addItem(new Element().setTitle("Version 1.2"))
-                .addItem(adsElement)
+                //.addItem(adsElement)
                 .addGroup("Connect with us")
                 .addEmail("freshvegbox@gmail.com")
                 //.addWebsite("http://medyo.github.io/")

@@ -29,8 +29,7 @@ import java.util.Map;
 
 public class AddressAdd extends AppCompatActivity {
 
-	EditText chk_fullname, chk_mobile, chk_pincode, chk_flat, chk_colony,
-			chk_city;
+	EditText chk_fullname, chk_mobile, chk_pincode, chk_flat, chk_colony,chk_city;
 	Button btnadd;
 	private ProgressDialog mProgressDialog;
 	String userId = null;

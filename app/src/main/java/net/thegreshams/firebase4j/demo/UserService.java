@@ -92,7 +92,7 @@ public class UserService {
 
             firebase = new Firebase(firebase_baseUrl);
             Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
-            dataMap.put("userId", generatedString);
+            dataMap.put("uid", generatedString);
             dataMap.put("firstName", firstName);
             dataMap.put("lastName", lastName);
             dataMap.put("email", email);
@@ -184,13 +184,10 @@ public class UserService {
             }
 
         } catch (FirebaseException | UnsupportedEncodingException | JSONException e) {
-        //    Log.e("Login call error ", e.getMessage());
-
+            Log.e("Login call error ", userId,e);
             return userId;
         }
-      //  Log.e("Login call response====", "\n\nResult of Check User credentilas:\n" + response);
-
-        System.out.println("\n\nResult of Check User credentilas:\n" + response);
+        Log.e("Login call response=", "\n\nResult of Check User credentilas:\n" + response);
         return userId;
 
     }
@@ -441,10 +438,9 @@ public class UserService {
                 }
             }
         } catch (JSONException e) {
-
             Log.e("Error while ", "", e);
         }
-        System.out.println("\n\nResult of email address :\n" + userData);
+        Log.d("Result of email address" , userData);
         return userData;
 
     }
@@ -460,13 +456,11 @@ public class UserService {
             firebase = new Firebase(firebase_baseUrl);
             response = firebase.get();
             JSONObject config = new JSONObject(response.getRawBody());
-            //Log.e("", "has email===" + config.has("gmailEmail"));
+
             if (config != null && config.has("gmailEmail")) {
                 configMap.put("gmailEmail",config.get("gmailEmail"));
             }
-            //Log.e("", "has email===" + config.has("gmailPassword"));
             if (config != null && config.has("gmailPassword")) {
-
                 configMap.put("gmailPassword", config.get("gmailPassword"));
             }
             if (config != null && config.has("cansendmail")) {
@@ -478,7 +472,7 @@ public class UserService {
         } catch (FirebaseException | UnsupportedEncodingException | JSONException e) {
             LOGGER.error(e);
         }
-        System.out.println("\n\nResult of Config\n" + response);
+        Log.e("\n\nResult of Config\n" , response.getRawBody());
         return configMap;
 
     }
