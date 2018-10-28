@@ -2,6 +2,8 @@ package net.thegreshams.firebase4j.demo;
 
 import android.util.Log;
 
+import com.vegfreshbox.ecommerce.pojo.AddressPojo;
+
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.error.JacksonUtilityException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
@@ -359,7 +361,7 @@ public class UserService {
 
 
     public static Order createNewOrder(String uId, String orderAmt, List<Product> products,
-                                         String deliveryAddress) {
+                                       AddressPojo deliveryAddress,String email) {
         String date = getCurrentDate();
         Order order = null;
         FirebaseResponse response = null;
@@ -376,7 +378,8 @@ public class UserService {
             orderMap.put("deliveryAddress", deliveryAddress);
             orderMap.put("orderDate", date);
             orderMap.put("products", products);
-            orderMap.put("status", "Placed");
+            orderMap.put("status", "InProcess");
+            orderMap.put("email", email);
 
 
             response = firebase.patch(orderMap);
@@ -386,9 +389,7 @@ public class UserService {
             order.setOrderId(orderId);
             order.setOrderTotal(orderAmt);
             order.setProducts(products);
-            order.setDeliveryAddress(deliveryAddress);
-           // response = firebase.get();
-
+            order.setDeliveryAddress(deliveryAddress.toString());
 
             System.out.println("\n\nResult of get order details\n" + response);
         } catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException e) {

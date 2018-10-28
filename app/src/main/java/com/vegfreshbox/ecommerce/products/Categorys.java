@@ -37,7 +37,7 @@ public class Categorys {
 
 			//System.out.println(json);
 		} catch (IOException ex) {
-			Log.e("==RESPONSE ERROR=111111111111", ex.toString());
+			Log.e("loadJSONFromAsset", ex.toString());
 			ex.printStackTrace();
 			return null;
 		}
@@ -53,7 +53,7 @@ public class Categorys {
 
 		} else {
 			jsonString = loadJSONFromAsset();
-			Log.e("Categoryfileassets","lading from assets folder");
+			Log.e("getCategoryList","lading from assets folder");
 		}
 
 		//Log.e("Categoryfilegoto",jsonString);
@@ -88,7 +88,7 @@ public class Categorys {
 			}
 
 		} catch (JSONException e) {
-			Log.e("JSON Error", "Errorrororrrrrrrrrrrrrrrrrrr");
+			Log.e("JSON Error", "error",e);
 		}
 
 
@@ -159,6 +159,11 @@ public class Categorys {
 			if(jsonObject.has("imageLocal")) {
 				productPojo.setImagelocal(jsonObject.getString("imageLocal"));
 			}
+
+			if(jsonObject.has("isStockAvailable")) {
+				productPojo.setIsStockAvailable(jsonObject.getString("isStockAvailable"));
+			}
+
 			// Log.e("JSON TEST", jsonObject.getString("id"));
 
 			productPojoArrayList.add(productPojo);

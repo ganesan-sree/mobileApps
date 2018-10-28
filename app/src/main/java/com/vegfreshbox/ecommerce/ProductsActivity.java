@@ -245,8 +245,7 @@ public class ProductsActivity extends AppCompatActivity {
 
             MyCart myCartdb = new MyCart(context);
             myCartdb.open();
-            String[] Qty = myCartdb.checkQuantity(verticalList.get(position)
-                    .getId());
+            String[] Qty = myCartdb.checkQuantity(verticalList.get(position).getId());
             if (Qty == null) {
                 holder.addtocart.setVisibility(View.VISIBLE);
                 holder.quantityMan.setVisibility(View.GONE);

@@ -11,8 +11,17 @@ public class ProductPojo {
     private String imagelocal;
     private String price;
     private String wgt;
+    private String isStockAvailable;
 
     private String quantity;
+
+    public String getIsStockAvailable() {
+        return isStockAvailable;
+    }
+
+    public void setIsStockAvailable(String isStockAvailable) {
+        this.isStockAvailable = isStockAvailable;
+    }
 
     public void setQuantity(String quantity) {
         this.quantity = quantity;

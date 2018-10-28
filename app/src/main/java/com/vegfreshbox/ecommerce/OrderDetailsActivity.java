@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.vegfreshbox.ecommerce.adapter.OrderHistoryDetailsAdapter;
+import com.vegfreshbox.ecommerce.pojo.AddressPojo;
 import com.vegfreshbox.ecommerce.pojo.OrderHistoryProductsDetailsPojo;
 import com.vegfreshbox.ecommerce.pojo.ProductPojo;
 
@@ -62,17 +63,24 @@ public class OrderDetailsActivity extends AppCompatActivity {
             if (orderStr !=null) {
                 JSONObject orders = new JSONObject(orderStr);
                 Iterator<String> keys = orders.keys();
-
+                String deliveryAddrress="";
                 while (keys.hasNext()) {
                     //System.out.println(keys.next());
                     String orderId = keys.next();
                     Log.e("OrderId++++++",orderId);
                     JSONObject order = (JSONObject) orders.get(orderId);
+ if(order.has("deliveryAddress")){
+     JSONObject deliveryAddress=order.getJSONObject("deliveryAddress");
+     Log.e("delivery address ==",deliveryAddress.toString());
+     AddressPojo addr=getAddressData(deliveryAddress);
+     deliveryAddrress=addr.toString();
+ }
+
 
                     if(orderId.equals(id)) {
 
                         orderHistoryProductsDetailsPojo.setId(orderId);
-                        orderHistoryProductsDetailsPojo.setDeliveryAddress(order.getString("deliveryAddress"));
+                        orderHistoryProductsDetailsPojo.setDeliveryAddress(deliveryAddrress);
                         orderHistoryProductsDetailsPojo.setTotal(order.getString("orderAmt"));
                         orderHistoryProductsDetailsPojo.setOrderDate(order.getString("orderDate"));
 
@@ -157,4 +165,19 @@ public class OrderDetailsActivity extends AppCompatActivity {
         return true;
     }
 
+
+    AddressPojo getAddressData( JSONObject addr ) {
+        AddressPojo addressData = new AddressPojo();
+        try {
+            addressData.setName(addr.getString("name"));
+            addressData.setFlat(addr.getString("flat"));
+            addressData.setColony(addr.getString("colony"));
+            addressData.setCity(addr.getString("city"));
+            addressData.setPincode(addr.getString("pincode"));
+            addressData.setMobile(addr.getString("mobile"));
+        } catch (Exception e) {
+            Log.e("err", e.getMessage(), e);
+        }
+        return addressData;
+    }
 }

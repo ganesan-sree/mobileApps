@@ -172,7 +172,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             try {
 
-                final Map<String, Object> config = userService.getConfig();
+              //  final Map<String, Object> config = userService.getConfig();
 
                 if (userId != null) {
 
@@ -190,20 +190,20 @@ public class PaymentActivity extends AppCompatActivity {
                    // if (config.get("cancreateorder") != null && (Boolean) config.get("cancreateorder")) {
 
                     order=  userService.createNewOrder(userId,
-                                String.valueOf(totalpay), products, addressData.toString());
+                                String.valueOf(totalpay), products, addressData,userService.getEmailAddress(userData));
 
                   //  }
-                    Log.e("can Send mail", ""+ config.get("cansendmail"));
-                    if ((Boolean) config.get("cansendmail")) {
-                        Thread thread = new Thread() {
-                            public void run() {
-                                Log.e("Email Address to sent", userService.getEmailAddress(userData));
-                                Log.e("Email Address to email", "" + config.get("gmailEmail") + "  " + config.get("gmailPassword") + " " + config.get("cansendmail"));
-                                sendMail(addressData, order, userService.getEmailAddress(userData), config);
-                        }
-                    } ;
-                    thread.start();
-                }
+                 //   Log.e("can Send mail", ""+ config.get("cansendmail"));
+                 //   if ((Boolean) config.get("cansendmail")) {
+               //         Thread thread = new Thread() {
+                 //           public void run() {
+                 //               Log.e("Email Address to sent", userService.getEmailAddress(userData));
+                //               Log.e("Email Address to email", "" + config.get("gmailEmail") + "  " + config.get("gmailPassword") + " " + config.get("cansendmail"));
+                //                sendMail(addressData, order, userService.getEmailAddress(userData), config);
+                //       }
+                //    } ;
+                //    thread.start();
+              //  }
             }
 
             } catch (Exception e) {
