@@ -119,6 +119,14 @@
         android:src="@drawable/addtocart"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>
+
+    <ImageView
+        android:layout_width="30dp"
+        android:id="@+id/outofstock"
+        android:layout_height="30dp"
+        android:src="@drawable/outofstock"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
         
         
         

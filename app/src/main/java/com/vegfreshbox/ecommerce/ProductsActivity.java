@@ -125,9 +125,7 @@ public class ProductsActivity extends AppCompatActivity {
 
     public static void setBadgeCount(Context context, LayerDrawable icon,
                                      String count) {
-
         BadgeDrawable badge;
-
         // Reuse drawable if possible
         Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge);
         if (reuse != null && reuse instanceof BadgeDrawable) {
@@ -144,14 +142,11 @@ public class ProductsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        // noinspection SimplifiableIfStatement
         if (id == R.id.searchnavigationicon) {
             Intent i = new Intent(ProductsActivity.this, CartActivity.class);
             startActivity(i);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -188,7 +183,7 @@ public class ProductsActivity extends AppCompatActivity {
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView txtView, price, wgt, product_quantity;
-            ImageView profilePic, addtocart, removefromcart;
+            ImageView profilePic, addtocart, removefromcart,outofstock;
             LinearLayout quantityMan;
 
             public ImageView image, product_quantity_dec, product_quantity_inc;
@@ -219,18 +214,14 @@ public class ProductsActivity extends AppCompatActivity {
         @Override
         public ProductsAdapter.MyViewHolder onCreateViewHolder(
                 ViewGroup parent, int viewType) {
-
             View itemView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.product_table_list_item, parent, false);
             return new ProductsAdapter.MyViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(final ProductsAdapter.MyViewHolder holder,
-                                     final int position) {
-
+        public void onBindViewHolder(final ProductsAdapter.MyViewHolder holder,final int position) {
             holder.txtView.setText(verticalList.get(position).getName());
-
             if (verticalList.get(position).getImagelocal() != null) {
                 Picasso.with(context).load("file:///android_asset/"
                                 + verticalList.get(position).getImagelocal())
@@ -240,8 +231,16 @@ public class ProductsActivity extends AppCompatActivity {
                         .resize(250, 250).into(holder.profilePic);
             }
 
-            holder.price.setText(verticalList.get(position).getPrice());
+            String dbPrice =verticalList.get(position).getPrice();
+            holder.price.setText(dbPrice);
             holder.wgt.setText(verticalList.get(position).getWgt());
+
+            // out of stock flag is on
+            if(dbPrice !=null && dbPrice.equals("0")){
+                holder.outofstock.setVisibility(View.VISIBLE);
+                holder.addtocart.setVisibility(View.GONE);
+                holder.quantityMan.setVisibility(View.GONE);
+            }
 
             MyCart myCartdb = new MyCart(context);
             myCartdb.open();
@@ -266,17 +265,14 @@ public class ProductsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, "Added to cart successfully.",Toast.LENGTH_SHORT).show();
-
                     byte[] utf8Bytes;
                     String name = null;
-
                     try {
                         utf8Bytes = verticalList.get(position).getName().getBytes("UTF8");
                         name = new String(utf8Bytes, "UTF8");
                     } catch (UnsupportedEncodingException e) {
                         Log.e("error","",e);
                     }
-
                     DatabaseUtil.createProduct(context,
                             verticalList.get(position).getId(), name,
                             verticalList.get(position).getImage(), verticalList.get(position).getImagelocal(),
@@ -302,7 +298,7 @@ public class ProductsActivity extends AppCompatActivity {
                             holder.removefromcart.setVisibility(View.GONE);
                             HomeActivity.countproductoncart = HomeActivity.countproductoncart - 1;
                             setBadgeCount(context, mCartMenuIcon, String.valueOf(HomeActivity.countproductoncart));
-                            // new ProductsActivity().controllcountincrease();
+
                         }
                     });
 
@@ -325,8 +321,6 @@ public class ProductsActivity extends AppCompatActivity {
 
                             verticalList.get(position).setQuantity(String.valueOf(qty));
                             verticalList.get(position).setWgt(String.valueOf(wgt));
-                            //Toast.makeText(context, "Qty added" + qty,
-                            //		Toast.LENGTH_SHORT).show();
                             holder.product_quantity.setText(String.valueOf(qty));
                             // holder.wgt.setText(String.valueOf(wgt));
                             DatabaseUtil.updateQtyAndWgt(context, verticalList.get(position).getId(), wgt, qty);

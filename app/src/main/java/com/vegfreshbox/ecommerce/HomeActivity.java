@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -78,11 +79,8 @@ public class HomeActivity extends AppCompatActivity implements
     private RecyclerView recyclerView;
     private ProgressDialog mProgressDialog;
     String categoryFile = null;
-
     public static long countproductoncart = 0;
-
     RelativeLayout notificationCount1;
-
     private static final String TAG = "MainActivity";
 
     @Override
@@ -94,11 +92,9 @@ public class HomeActivity extends AppCompatActivity implements
 
         handleFireBaseData();
 
-
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
                 Log.e(key, "getting push notification");
-                //String value = getIntent().getExtras().getString(key);
                 if (key.equals("AnotherActivity") && getIntent().getExtras().getString(key).equals("true")) {
                     Intent intent = new Intent(this, AnotherActivity.class);
                     intent.putExtra("message", getIntent().getExtras().getString("message"));
@@ -145,13 +141,14 @@ public class HomeActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        Log.e("backkk", "ggggg");
+        Log.e(TAG, "onBackPressed");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
+        setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
     }
 
 
@@ -161,8 +158,7 @@ public class HomeActivity extends AppCompatActivity implements
         // getMenuInflater().inflate(R.menu.home, menu);
         getMenuInflater().inflate(R.menu.cart, menu);
 
-        mCartMenuIcon = (LayerDrawable) menu.findItem(R.id.action_cart)
-                .getIcon();
+        mCartMenuIcon = (LayerDrawable) menu.findItem(R.id.action_cart).getIcon();
         cart = (MenuItem) menu.findItem(R.id.action_cart);
         cart.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -178,9 +174,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     public static void setBadgeCount(Context context, LayerDrawable icon,
                                      String count) {
-
         BadgeDrawable badge;
-
         // Reuse drawable if possible
         Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge);
         if (reuse != null && reuse instanceof BadgeDrawable) {
@@ -237,17 +231,13 @@ public class HomeActivity extends AppCompatActivity implements
 
         } else if (id == R.id.nav_send) {
 
-            SharedPreferences sharedPreferences =
-                    getSharedPreferences("loginstate", MODE_PRIVATE);
+            SharedPreferences sharedPreferences =getSharedPreferences("loginstate", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("islogin", "");
             editor.putString("userid", "");
             editor.putString("userData", null);
-
             editor.commit();
-            Toast.makeText(getApplicationContext(),
-                    "Log Out Successfully",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Log Out Successfully", Toast.LENGTH_LONG).show();
 
         }else if (id == R.id.contact_us) {
             Intent i = new Intent(HomeActivity.this, AboutUs.class);
@@ -269,7 +259,7 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        countproductoncart = DatabaseUtil.getCartCount(HomeActivity.this);
+        setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
     }
 
 
@@ -292,9 +282,9 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("EEE", "resumeeeeeeeeeeee");
-        countproductoncart = DatabaseUtil.getCartCount(HomeActivity.this);
-
+        Log.e(TAG, "onResume");
+       // countproductoncart = DatabaseUtil.getCartCount(HomeActivity.this);
+        setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
     }
 
 
@@ -309,9 +299,6 @@ public class HomeActivity extends AppCompatActivity implements
                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                     @Override
                     public void onSuccess(byte[] bytes) {
-                        // Data for "images/island.jpg" is returns, use this as
-                        // needed
-                        //String str = new String(bytes);
                         try {
                             FileOutputStream fos = openFileOutput(
                                     "category.json", Context.MODE_PRIVATE);
@@ -474,7 +461,6 @@ public class HomeActivity extends AppCompatActivity implements
             mProgressDialog.show();
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.loading));
-
         }
 
         @Override
@@ -487,8 +473,7 @@ public class HomeActivity extends AppCompatActivity implements
                 if (output != null) {
                     category = output.getRawBody();
                     try {
-                        FileOutputStream fos = openFileOutput(
-                                "category.json", Context.MODE_PRIVATE);
+                        FileOutputStream fos = openFileOutput("category.json", Context.MODE_PRIVATE);
                         fos.write(category.getBytes());
                         fos.close();
                     } catch (Exception e) {

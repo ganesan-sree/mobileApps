@@ -43,13 +43,7 @@ public class PaymentActivity extends AppCompatActivity {
     Button btnpayment;
     private ProgressDialog mProgressDialog;
     TextView paymentamount, paymentcardholdername, paymentcardnumber, paymentcardexpiremonth, paymentcardexpireyear, paymentcardcvv;
-
     ArrayList<Product> products;
-    ArrayList<String> productid;
-
-    ArrayList<String> productname;
-    ArrayList<String> productprice;
-    ArrayList<String> productquantity;
     double shippingcharge;
     String userId = null;
     String userData = null;
@@ -66,31 +60,20 @@ public class PaymentActivity extends AppCompatActivity {
         final Intent intent = getIntent();
         Bundle bd = intent.getExtras();
         if (bd != null) {
-
             addressid = (String) bd.get("addressId");
             Log.e("Addres Id selected ", addressid);
         }
-
-
-        sharedPreferences = getSharedPreferences(
-                "loginstate", MODE_PRIVATE);
-
+        sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
         mProgressDialog = new ProgressDialog(PaymentActivity.this);
-
         paymentamount = (TextView) findViewById(R.id.paymentamount);
         btnpayment = (Button) findViewById(R.id.btnpayment);
-
-
         mycartdb = new MyCart(PaymentActivity.this);
         mycartdb.open();
         Cursor c = mycartdb.getAllData();
-
         totalpay = 0;
         if (c.moveToFirst()) {
             do {
-
                 totalpay += (Double.parseDouble(c.getString(5))) * Integer.parseInt(c.getString(7));
-
             } while (c.moveToNext());
         }
         paymentamount.setText("Total Order amount  , INR " + String.valueOf(totalpay) + "\n\n ");
@@ -218,18 +201,15 @@ public class PaymentActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             mProgressDialog.dismiss();
-            Log.e("Hi", "Done Downloading.==" + result);
+            Log.e("Payment", "Creating the new order.==" + result);
             try {
 
                 mycartdb.open();
                 mycartdb.deleteAllData();
                 mycartdb.close();
 
-
                 LayoutInflater inflater = getLayoutInflater();
-                View layout = inflater.inflate(R.layout.custom_toast,
-                        (ViewGroup) findViewById(R.id.custom_toast_container));
-
+                View layout = inflater.inflate(R.layout.custom_toast,(ViewGroup) findViewById(R.id.custom_toast_container));
                 TextView text = (TextView) layout.findViewById(R.id.text);
                 text.setText("Congrats, Your Order Placed Successfully, Confirmation Sent to mail address!");
 
@@ -239,30 +219,15 @@ public class PaymentActivity extends AppCompatActivity {
                 toast.setView(layout);
                 toast.show();
 
-                //Toast.makeText(getApplicationContext(),
-                //		"Congrats, Your Order Placed Successfully!",
-                //		Toast.LENGTH_SHORT).show();
-
-
-
-              //  Intent intent = new Intent(getApplicationContext(),
-               //        HomeActivity.class);
-               // startActivity(intent);
-
-
-                Intent intent = new Intent(PaymentActivity.this,
-                        OrderDetailsActivity.class);
+                Intent intent = new Intent(PaymentActivity.this,OrderDetailsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                 intent.putExtra("order", order);
                 startActivity(intent);
 
                 finish();
             } catch (Exception e) {
                 Log.e("order", "order detials", e);
-                Toast.makeText(getApplicationContext(),
-                        "Something went wrong please try again!",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Something went wrong please try again!",Toast.LENGTH_SHORT).show();
             }
 
 
@@ -270,11 +235,8 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void sendMail(AddressPojo addressData, Order order,String userEmailAddress, Map<String, Object> config) {
-
-
         try {
             Log.e("eee", "start sending mail");
-
             GMailSender sender = new GMailSender((String) config.get("gmailEmail"),(String) config.get("gmailPassword"));
             sender.sendMail(
                     "Your Order Detail",
@@ -294,7 +256,6 @@ public class PaymentActivity extends AppCompatActivity {
         String prdHtml = loadProductFromAsset();
         for (Product p : products) {
             String productHtml = prdHtml;
-
             productHtml = productHtml.replace("#productname#", "" + p.getProductName());
             productHtml = productHtml.replace("#qty#", "" + p.getProductQuantity());
             productHtml = productHtml.replace("#prdprice#", "" + VegUtils.getSubTotal(p.getProductPrice(),
@@ -309,12 +270,10 @@ public class PaymentActivity extends AppCompatActivity {
         body = body.replace("#orderno#", "" + order.getOrderId());
         body = body.replace("#orderdate#", "" + order.getOrderDate());
         body = body.replaceAll("#total#", "" + order.getOrderTotal());
-
         body = body.replace("#fullname#", "" + addressData.getName());
         body = body.replace("#address1#", "" + addressData.getFlat());
         body = body.replace("#address2#", "" + addressData.getColony());
-        body = body.replace("#city#",
-                "" + addressData.getCity() + " " + addressData.getPincode());
+        body = body.replace("#city#","" + addressData.getCity() + " " + addressData.getPincode());
         body = body.replace("#phone#", "" + addressData.getMobile());
         body = body.replace("#productlist#", pr);
 

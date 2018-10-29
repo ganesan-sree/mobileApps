@@ -39,7 +39,8 @@ public class OrderHistory extends AppCompatActivity {
     ListView lv;
     private ProgressDialog mProgressDialog;
     ArrayList<OrderHistoryPojo> orderHistoryPojoArrayList;
-    String orderStr =null;
+    String orderStr = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,9 +53,6 @@ public class OrderHistory extends AppCompatActivity {
         lv = (ListView) findViewById(R.id.orderhistorylist);
         orderHistoryPojoArrayList = new ArrayList<OrderHistoryPojo>();
         try {
-
-
-
             adapter = new OrderHistoryAdapter(OrderHistory.this,
                     R.layout.table_item_order_history,
                     orderHistoryPojoArrayList);
@@ -63,17 +61,12 @@ public class OrderHistory extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view,
                                         int i, long l) {
-                    OrderHistoryPojo details = (OrderHistoryPojo) adapterView
-                            .getItemAtPosition(i);
-                    Toast.makeText(getApplicationContext(),
-                            "Showing Order Details for " + details.getId(),
-                            Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(OrderHistory.this,
-                            OrderDetailsActivity.class);
+                    OrderHistoryPojo details = (OrderHistoryPojo) adapterView.getItemAtPosition(i);
+                    Toast.makeText(getApplicationContext(),"Showing Order Details for " + details.getId(),Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(OrderHistory.this,OrderDetailsActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("id", details.getId());
                     intent.putExtra("orderStr", orderStr);
-
                     startActivity(intent);
 
                 }
@@ -84,10 +77,6 @@ public class OrderHistory extends AppCompatActivity {
             } else {
                 Toast.makeText(OrderHistory.this, "You are not connected to Internet please go online", Toast.LENGTH_SHORT).show();
             }
-
-
-
-
 
 
         } catch (Exception e) {
@@ -112,50 +101,37 @@ public class OrderHistory extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             mProgressDialog = new ProgressDialog(OrderHistory.this);
             mProgressDialog.show();
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.loading));
-
         }
 
         @Override
         protected String doInBackground(String... params) {
             final UserService userService = new UserService();
             FirebaseResponse output = null;
-
             try {
-                SharedPreferences sharedPreferences = getSharedPreferences(
-                        "loginstate", MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
                 String userId = sharedPreferences.getString("userid", null);
                 orderStr = userService.getUserOrder(userId);
-
-                Log.e("orderstr",orderStr);
+                Log.e("orderstr", orderStr);
                 if (!VegUtils.isBlank(orderStr) && !orderStr.equals("null")) {
                     JSONObject orders = new JSONObject(orderStr);
-
                     Iterator<String> keys = orders.keys();
-
                     while (keys.hasNext()) {
-                        // System.out.println(keys.next());
                         String orderId = keys.next();
                         Log.e("OrderId =", orderId);
                         JSONObject order = (JSONObject) orders.get(orderId);
                         OrderHistoryPojo orderHistoryPojo = new OrderHistoryPojo();
                         orderHistoryPojo.setId(orderId);
                         orderHistoryPojo.setOrderdate(order.getString("orderDate"));
-                        orderHistoryPojo
-                                .setOrderamount(order.getString("orderAmt"));
+                        orderHistoryPojo.setOrderamount(order.getString("orderAmt"));
                         orderHistoryPojo.setOrderstatus(order.getString("status"));
-
                         orderHistoryPojoArrayList.add(orderHistoryPojo);
                         Collections.sort(orderHistoryPojoArrayList, new OrderDateComparator());
                     }
                 }
-
-
-
             } catch (Exception e) {
                 Log.e("error parsing ", "users orders", e);
             }

@@ -33,7 +33,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     OrderHistoryDetailsAdapter orderHistoryDetailsAdapter;
     ArrayList<OrderHistoryProductsDetailsPojo> orderHistoryProductsDetailsPojoArrayList;
     private ProgressDialog mProgressDialog;
-    public static TextView totalprice,deliveryAddress;
+    public static TextView totalprice, deliveryAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +42,17 @@ public class OrderDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Your Order Details");
 
-        totalprice=(TextView)findViewById(R.id.totalprice);
-        deliveryAddress=(TextView)findViewById(R.id.deliveryAddress);
+        totalprice = (TextView) findViewById(R.id.totalprice);
+        deliveryAddress = (TextView) findViewById(R.id.deliveryAddress);
 
-        orderhistoryproductslist=(ListView)findViewById(R.id.orderhistoryproductslist);
+        orderhistoryproductslist = (ListView) findViewById(R.id.orderhistoryproductslist);
         mProgressDialog = new ProgressDialog(OrderDetailsActivity.this);
         OrderHistoryProductsDetailsPojo orderHistoryProductsDetailsPojo = new OrderHistoryProductsDetailsPojo();
         Intent intent = getIntent();
         Bundle bd = intent.getExtras();
         if (bd != null) {
             id = (String) bd.get("id");
-            orderStr=bd.getString("orderStr");
+            orderStr = bd.getString("orderStr");
             orderObj = (Order) bd.get("order");
         }
         try {
@@ -60,113 +60,103 @@ public class OrderDetailsActivity extends AppCompatActivity {
             orderHistoryProductsDetailsPojoArrayList = new ArrayList<OrderHistoryProductsDetailsPojo>();
 
 
-            if (orderStr !=null) {
+            if (orderStr != null) {
                 JSONObject orders = new JSONObject(orderStr);
                 Iterator<String> keys = orders.keys();
-                String deliveryAddrress="";
+                String deliveryAddrress = "";
                 while (keys.hasNext()) {
                     //System.out.println(keys.next());
                     String orderId = keys.next();
-                    Log.e("OrderId++++++",orderId);
+                    Log.e("OrderId++++++", orderId);
                     JSONObject order = (JSONObject) orders.get(orderId);
- if(order.has("deliveryAddress")){
-     JSONObject deliveryAddress=order.getJSONObject("deliveryAddress");
-     Log.e("delivery address ==",deliveryAddress.toString());
-     AddressPojo addr=getAddressData(deliveryAddress);
-     deliveryAddrress=addr.toString();
- }
-
-
-                    if(orderId.equals(id)) {
+                    if (order.has("deliveryAddress")) {
+                        JSONObject deliveryAddress = order.getJSONObject("deliveryAddress");
+                        Log.e("delivery address ==", deliveryAddress.toString());
+                        AddressPojo addr = getAddressData(deliveryAddress);
+                        deliveryAddrress = addr.toString();
+                    }
+                    if (orderId.equals(id)) {
 
                         orderHistoryProductsDetailsPojo.setId(orderId);
                         orderHistoryProductsDetailsPojo.setDeliveryAddress(deliveryAddrress);
                         orderHistoryProductsDetailsPojo.setTotal(order.getString("orderAmt"));
                         orderHistoryProductsDetailsPojo.setOrderDate(order.getString("orderDate"));
 
-                        JSONArray products= order.getJSONArray("products");
+                        JSONArray products = order.getJSONArray("products");
 
                         for (int i = 0, size = products.length(); i < size; i++) {
                             JSONObject objectInArray = products.getJSONObject(i);
-                            ProductPojo pr= new ProductPojo();
-                            pr.setId((String)objectInArray.get("productId"));
-                            pr.setQuantity((String)objectInArray.get("productQuantity"));
-                            pr.setName((String)objectInArray.get("productName"));
-                            pr.setPrice((String)objectInArray.get("productPrice"));
-                            pr.setImage((String)objectInArray.get("productImage"));
-                            pr.setWgt((String)objectInArray.get("wgt"));
-                            if(objectInArray.has("imagelocal")){
-                                pr.setImagelocal((String)objectInArray.get("imagelocal"));
+                            ProductPojo pr = new ProductPojo();
+                            pr.setId((String) objectInArray.get("productId"));
+                            pr.setQuantity((String) objectInArray.get("productQuantity"));
+                            pr.setName((String) objectInArray.get("productName"));
+                            pr.setPrice((String) objectInArray.get("productPrice"));
+                            pr.setImage((String) objectInArray.get("productImage"));
+                            pr.setWgt((String) objectInArray.get("wgt"));
+                            if (objectInArray.has("imagelocal")) {
+                                pr.setImagelocal((String) objectInArray.get("imagelocal"));
                             }
-
                             orderHistoryProductsDetailsPojo.getProducts().add(pr);
-                          //  System.out.println(objectInArray.get("productName"));
                         }
 
-                        
+
                         break;
                     }
-
 
 
                 }
             }
 
 
-            if(orderObj !=null){
+            if (orderObj != null) {
 
                 orderHistoryProductsDetailsPojo.setId(orderObj.getOrderId());
                 orderHistoryProductsDetailsPojo.setDeliveryAddress(orderObj.getDeliveryAddress());
                 orderHistoryProductsDetailsPojo.setTotal(orderObj.getOrderTotal());
                 orderHistoryProductsDetailsPojo.setOrderDate(orderObj.getOrderDate());
 
-                List<Product> products= orderObj.getProducts();
+                List<Product> products = orderObj.getProducts();
 
                 for (int i = 0, size = products.size(); i < size; i++) {
                     Product objectInArray = products.get(i);
-                    ProductPojo pr= new ProductPojo();
-                    pr.setId((String)objectInArray.getProductId());
-                    pr.setQuantity((String)objectInArray.getProductQuantity());
-                    pr.setName((String)objectInArray.getProductName());
-                    pr.setPrice((String)objectInArray.getProductPrice());
-                    pr.setImage((String)objectInArray.getProductImage());
-                    pr.setWgt((String)objectInArray.getWgt());
-                    if(objectInArray.getImagelocal() !=null){
-                        pr.setImagelocal((String)objectInArray.getImagelocal());
+                    ProductPojo pr = new ProductPojo();
+                    pr.setId((String) objectInArray.getProductId());
+                    pr.setQuantity((String) objectInArray.getProductQuantity());
+                    pr.setName((String) objectInArray.getProductName());
+                    pr.setPrice((String) objectInArray.getProductPrice());
+                    pr.setImage((String) objectInArray.getProductImage());
+                    pr.setWgt((String) objectInArray.getWgt());
+                    if (objectInArray.getImagelocal() != null) {
+                        pr.setImagelocal((String) objectInArray.getImagelocal());
                     }
 
                     orderHistoryProductsDetailsPojo.getProducts().add(pr);
-                    //  System.out.println(objectInArray.get("productName"));
                 }
 
             }
-
-
-            //Log.e("JSON TEST",jsonObject.getString("id"));
-
 
             orderHistoryDetailsAdapter = new OrderHistoryDetailsAdapter(OrderDetailsActivity.this, R.layout.table_item_order_history_details,
                     orderHistoryProductsDetailsPojo.getProducts());
             orderhistoryproductslist.setAdapter(orderHistoryDetailsAdapter);
 
-            totalprice.setText("INR "+String.valueOf(orderHistoryProductsDetailsPojo.getTotal()));
+            totalprice.setText("INR " + String.valueOf(orderHistoryProductsDetailsPojo.getTotal()));
             deliveryAddress.setText(orderHistoryProductsDetailsPojo.getDeliveryAddress());
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-          
+
 
     }
+
     @Override
-    public boolean onSupportNavigateUp(){
+    public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
 
 
-    AddressPojo getAddressData( JSONObject addr ) {
+    private AddressPojo getAddressData(JSONObject addr) {
         AddressPojo addressData = new AddressPojo();
         try {
             addressData.setName(addr.getString("name"));
