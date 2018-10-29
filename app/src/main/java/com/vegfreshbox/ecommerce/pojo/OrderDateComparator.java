@@ -13,6 +13,6 @@ public class OrderDateComparator implements Comparator {
         OrderHistoryPojo s1 = (OrderHistoryPojo) o1;
         OrderHistoryPojo s2 = (OrderHistoryPojo) o2;
 
-        return s2.getOrderdate().compareTo(s1.getOrderdate());
+        return s2.getId().compareTo(s1.getId());
     }
 }

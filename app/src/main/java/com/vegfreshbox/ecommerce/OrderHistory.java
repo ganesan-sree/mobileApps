@@ -141,7 +141,6 @@ public class OrderHistory extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.e("order history", "Calling users orders!");
             adapter.setOrderlist(orderHistoryPojoArrayList);
             adapter.notifyDataSetChanged();
             mProgressDialog.dismiss();

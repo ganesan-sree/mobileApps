@@ -11,7 +11,7 @@ public class ProductPojo {
     private String imagelocal;
     private String price;
     private String wgt;
-    private String isStockAvailable;
+    private String isStockAvailable ="true";
 
     private String quantity;
 

@@ -121,12 +121,14 @@
         android:layout_centerVertical="true"/>
 
     <ImageView
-        android:layout_width="30dp"
         android:id="@+id/outofstock"
-        android:layout_height="30dp"
-        android:src="@drawable/outofstock"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"/>
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="0dp"
+        android:src="@drawable/outofstock" />
         
         
         

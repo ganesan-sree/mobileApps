@@ -99,7 +99,7 @@ public class AddressPojo {
 		sb.append(getCity());
 		sb.append(" ");
 		sb.append(getPincode());
-		sb.append(" ");
+		sb.append(" / ");
 		sb.append(getMobile());
 		
 		

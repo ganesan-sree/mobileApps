@@ -195,6 +195,7 @@ public class ProductsActivity extends AppCompatActivity {
                 // profilePic.setBackgroundResource(R.drawable.image_border);
                 addtocart = (ImageView) view.findViewById(R.id.addtocart);
                 removefromcart = (ImageView) view.findViewById(R.id.removefromcart);
+                outofstock = (ImageView) view.findViewById(R.id.outofstock);
                 price = (TextView) view.findViewById(R.id.price);
                 wgt = (TextView) view.findViewById(R.id.wgt);
                 quantityMan = (LinearLayout) view.findViewById(R.id.qutysec);
@@ -224,23 +225,24 @@ public class ProductsActivity extends AppCompatActivity {
             holder.txtView.setText(verticalList.get(position).getName());
             if (verticalList.get(position).getImagelocal() != null) {
                 Picasso.with(context).load("file:///android_asset/"
-                                + verticalList.get(position).getImagelocal())
+                        + verticalList.get(position).getImagelocal())
                         .resize(250, 250).into(holder.profilePic);
             } else {
                 Picasso.with(context).load(verticalList.get(position).getImage())
                         .resize(250, 250).into(holder.profilePic);
             }
 
-            String dbPrice =verticalList.get(position).getPrice();
-            holder.price.setText(dbPrice);
+            holder.price.setText(verticalList.get(position).getPrice());
             holder.wgt.setText(verticalList.get(position).getWgt());
 
             // out of stock flag is on
-            if(dbPrice !=null && dbPrice.equals("0")){
+            if ( verticalList.get(position).getIsStockAvailable().equals("false")) {
                 holder.outofstock.setVisibility(View.VISIBLE);
                 holder.addtocart.setVisibility(View.GONE);
                 holder.quantityMan.setVisibility(View.GONE);
-            }
+            } else {
+                holder.outofstock.setVisibility(View.GONE);
+
 
             MyCart myCartdb = new MyCart(context);
             myCartdb.open();
@@ -259,6 +261,8 @@ public class ProductsActivity extends AppCompatActivity {
                 verticalList.get(position).setWgt(String.valueOf(Qty[1]));
             }
             myCartdb.close();
+
+        }
             // END PRODUCT CHECK
 
             holder.addtocart.setOnClickListener(new View.OnClickListener() {

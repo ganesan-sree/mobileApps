@@ -259,7 +259,7 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
+      //  setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
     }
 
 
@@ -283,8 +283,9 @@ public class HomeActivity extends AppCompatActivity implements
     protected void onResume() {
         super.onResume();
         Log.e(TAG, "onResume");
-       // countproductoncart = DatabaseUtil.getCartCount(HomeActivity.this);
-        setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
+        if(mCartMenuIcon !=null){
+            setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
+        }
     }
 
 
