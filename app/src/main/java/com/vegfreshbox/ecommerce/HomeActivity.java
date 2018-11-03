@@ -43,31 +43,20 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.vegfreshbox.ecommerce.adapter.HomeCategoryAdapter;
-import com.vegfreshbox.ecommerce.chat.SplashActivity;
 import com.vegfreshbox.ecommerce.database.DatabaseUtil;
 import com.vegfreshbox.ecommerce.products.Categorys;
 import com.vegfreshbox.ecommerce.utils.VegUtils;
-
 import net.thegreshams.firebase4j.demo.UserService;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
-
-import org.chat21.android.core.ChatManager;
-import org.chat21.android.core.users.models.IChatUser;
-import org.chat21.android.ui.ChatUI;
-import org.chat21.android.ui.contacts.activites.ContactListActivity;
-import org.chat21.android.ui.conversations.listeners.OnNewConversationClickListener;
-import org.chat21.android.ui.messages.listeners.OnMessageClickListener;
-import org.chat21.android.utils.IOUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.chat21.android.core.ChatManager._SERIALIZED_CHAT_CONFIGURATION_LOGGED_USER;
 
 public class HomeActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -83,6 +72,7 @@ public class HomeActivity extends AppCompatActivity implements
     RelativeLayout notificationCount1;
     private static final String TAG = "MainActivity";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +80,7 @@ public class HomeActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        handleFireBaseData();
+       // handleFireBaseData();
 
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
@@ -210,9 +200,9 @@ public class HomeActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         if (id == R.id.searchnavigationicon) {
-            // Handle the camera action
         } else if (id == R.id.nav_gallery) {
             Intent i = new Intent(HomeActivity.this, CartActivity.class);
             startActivity(i);
@@ -229,7 +219,7 @@ public class HomeActivity extends AppCompatActivity implements
                 startActivity(intent);
             }
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.logout) {
 
             SharedPreferences sharedPreferences =getSharedPreferences("loginstate", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -238,6 +228,8 @@ public class HomeActivity extends AppCompatActivity implements
             editor.putString("userData", null);
             editor.commit();
             Toast.makeText(getApplicationContext(),"Log Out Successfully", Toast.LENGTH_LONG).show();
+            NavigationView view=(drawer.findViewById(R.id.nav_view));
+            view.getMenu().findItem(R.id.logout).setVisible(false);
 
         }else if (id == R.id.contact_us) {
             Intent i = new Intent(HomeActivity.this, AboutUs.class);
@@ -250,7 +242,7 @@ public class HomeActivity extends AppCompatActivity implements
       //      startActivity(i);
       //  }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
@@ -259,7 +251,6 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-      //  setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
     }
 
 
@@ -286,63 +277,34 @@ public class HomeActivity extends AppCompatActivity implements
         if(mCartMenuIcon !=null){
             setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
         }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView view=(drawer.findViewById(R.id.nav_view));
+
+        SharedPreferences sharedPreferences = getSharedPreferences("loginstate", Context.MODE_PRIVATE);
+        if (sharedPreferences.getString("islogin", "").equals("1")) {
+            view.getMenu().findItem(R.id.logout).setVisible(true);
+        }else{
+            view.getMenu().findItem(R.id.logout).setVisible(false);
+        }
     }
 
 
-    void handleFireBaseData() {
-        Log.e("CallingFirebase", "firebase category.json");
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference pathReference = storageRef.child("category.json");
-
-        final long ONE_MEGABYTE = 256 * 256;
-        pathReference.getBytes(ONE_MEGABYTE)
-                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        try {
-                            FileOutputStream fos = openFileOutput(
-                                    "category.json", Context.MODE_PRIVATE);
-                            fos.write(bytes);
-                            fos.close();
-                        } catch (Exception e) {
-                            Log.e("Error writing file", e.getMessage());
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.e("Error onfirebase ", "expection while retriving ", exception);
-            }
-        });
-    }
 
     private String readCategoryFile() {
         String output = null;
         StringBuffer text = null;
         try {
-
-            if (fileExists(HomeActivity.this, "category.json")) {
-                BufferedReader bReader = new BufferedReader(new InputStreamReader(
-                        openFileInput("category.json")));
-                String line;
-                text = new StringBuffer();
-                while ((line = bReader.readLine()) != null) {
-                    text.append(line + "\n");
-                }
-                output = text.toString();
-            } else {
+            output=getCatalog();
+            if (VegUtils.isBlank(output)) {
                 readCategoryFireBaseDatabase();
                 Log.e("File not found", "Firebase Storage file not Found");
             }
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("error parsing ", "category json file", e);
             readCategoryFireBaseDatabase();
         }
         return output;
-
     }
 
 
@@ -355,103 +317,9 @@ public class HomeActivity extends AppCompatActivity implements
         }
     }
 
-
-    public boolean fileExists(Context context, String filename) {
-        File file = context.getFileStreamPath(filename);
-        if (file == null || !file.exists()) {
-            return false;
-        }
-        return true;
-    }
-
-    public void initChatSDK() {
-
-        //enable persistence must be made before any other usage of FirebaseDatabase instance.
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-        // it creates the chat configurations
-        ChatManager.Configuration mChatConfiguration =
-                new ChatManager.Configuration.Builder(getString(R.string.chat_firebase_appId))
-                        .firebaseUrl(getString(R.string.chat_firebase_url))
-                        .storageBucket(getString(R.string.chat_firebase_storage_bucket))
-                        .build();
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        // assuming you have a login, check if the logged user (converted to IChatUser) is valid
-//        if (currentUser != null) {
-        if (currentUser != null) {
-            IChatUser iChatUser = (IChatUser) IOUtils.getObjectFromFile(getBaseContext(),
-                    _SERIALIZED_CHAT_CONFIGURATION_LOGGED_USER);
-
-//            IChatUser iChatUser = new ChatUser();
-//            iChatUser.setId(currentUser.getUid());
-//            iChatUser.setEmail(currentUser.getEmail());
-
-            ChatManager.start(this, mChatConfiguration, iChatUser);
-            Log.i(TAG, "chat has been initialized with success");
-
-//            ChatManager.getInstance().initContactsSyncronizer();
-
-            ChatUI.getInstance().setContext(getBaseContext());
-            ChatUI.getInstance().enableGroups(true);
-
-            ChatUI.getInstance().setOnMessageClickListener(new OnMessageClickListener() {
-                @Override
-                public void onMessageLinkClick(TextView message, ClickableSpan clickableSpan) {
-                    String text = ((URLSpan) clickableSpan).getURL();
-
-                    Uri uri = Uri.parse(text);
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
-                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(browserIntent);
-                }
-            });
-
-            // set on new conversation click listener
-//            final IChatUser support = new ChatUser("support", "Chat21 Support");
-            final IChatUser support = null;
-            ChatUI.getInstance().setOnNewConversationClickListener(new OnNewConversationClickListener() {
-                @Override
-                public void onNewConversationClicked() {
-                    if (support != null) {
-                        ChatUI.getInstance().openConversationMessagesActivity(support);
-                    } else {
-                        Intent intent = new Intent(getBaseContext(), ContactListActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // start activity from context
-
-                        startActivity(intent);
-                    }
-                }
-            });
-
-//            // on attach button click listener
-//            ChatUI.getInstance().setOnAttachClickListener(new OnAttachClickListener() {
-//                @Override
-//                public void onAttachClicked(Object object) {
-//                    Toast.makeText(instance, "onAttachClickListener", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//
-//            // on create group button click listener
-//            ChatUI.getInstance().setOnCreateGroupClickListener(new OnCreateGroupClickListener() {
-//                @Override
-//                public void onCreateGroupClicked() {
-//                    Toast.makeText(instance, "setOnCreateGroupClickListener", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-            Log.i(TAG, "ChatUI has been initialized with success");
-
-        } else {
-            Log.w(TAG, "chat can't be initialized because chatUser is null");
-        }
-    }
-
     private class FireBaseService extends AsyncTask<String, Void, String> {
 
         private ProgressDialog mProgressDialog;
-        FirebaseResponse res = null;
-        boolean isEmailExist = false;
         String category = null;
 
         @Override
@@ -474,9 +342,8 @@ public class HomeActivity extends AppCompatActivity implements
                 if (output != null) {
                     category = output.getRawBody();
                     try {
-                        FileOutputStream fos = openFileOutput("category.json", Context.MODE_PRIVATE);
-                        fos.write(category.getBytes());
-                        fos.close();
+                        storeCatalog(category.getBytes());
+                        Log.e("FileLoading","loading using database"+category.getBytes());
                     } catch (Exception e) {
                         Log.e("Error writing file", e.getMessage());
                     }
@@ -496,4 +363,17 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
 
+    private void storeCatalog(byte[] bytes) throws UnsupportedEncodingException {
+        String catalog = new String(bytes, "UTF-8");
+        SharedPreferences sharedPreferences =getSharedPreferences("catalog", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("catalog", catalog);
+        editor.commit();
+    }
+
+    private String getCatalog() {
+        SharedPreferences sharedPreferences = getSharedPreferences("catalog", MODE_PRIVATE);
+        String catalog = sharedPreferences.getString("catalog", null);
+        return catalog;
+    }
 }

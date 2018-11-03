@@ -3,6 +3,7 @@ package com.vegfreshbox.ecommerce;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
@@ -82,7 +83,7 @@ public class ProductsActivity extends AppCompatActivity {
 
         Categorys cate = new Categorys(ProductsActivity.this);
         // SubcategoriesAdapter adapter = new SubcategoriesAdapter(null);
-        productsAdapter = new ProductsAdapter(getApplicationContext(), cate.getProductList(id, readCategoryFile()));
+        productsAdapter = new ProductsAdapter(getApplicationContext(), cate.getProductList(id, getCatalog()));
         vertical_recycler_view.setAdapter(productsAdapter);
 
         // horizontal_recycler_view.setAdapter(adapter);
@@ -119,7 +120,7 @@ public class ProductsActivity extends AppCompatActivity {
         Log.e("CART Count", String.valueOf(HomeActivity.countproductoncart));
         myCartdb.close();
 
-        setBadgeCount(this, mCartMenuIcon,String.valueOf(HomeActivity.countproductoncart));
+        setBadgeCount(this, mCartMenuIcon, String.valueOf(HomeActivity.countproductoncart));
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -156,24 +157,6 @@ public class ProductsActivity extends AppCompatActivity {
         return true;
     }
 
-    private String readCategoryFile() {
-        String output = null;
-        StringBuffer text = null;
-        try {
-            BufferedReader bReader = new BufferedReader(new InputStreamReader(openFileInput("category.json")));
-            String line;
-            text = new StringBuffer();
-            while ((line = bReader.readLine()) != null) {
-                text.append(line + "\n");
-            }
-            output = text.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return output;
-
-    }
 
     public class ProductsAdapter extends
             RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
@@ -183,7 +166,7 @@ public class ProductsActivity extends AppCompatActivity {
 
         public class MyViewHolder extends RecyclerView.ViewHolder {
             public TextView txtView, price, wgt, product_quantity;
-            ImageView profilePic, addtocart, removefromcart,outofstock;
+            ImageView productImage, addtocart, removefromcart, outofstock;
             LinearLayout quantityMan;
 
             public ImageView image, product_quantity_dec, product_quantity_inc;
@@ -191,8 +174,7 @@ public class ProductsActivity extends AppCompatActivity {
             public MyViewHolder(View view) {
                 super(view);
                 txtView = (TextView) view.findViewById(R.id.product_list_name);
-                profilePic = (ImageView) view.findViewById(R.id.img_product);
-                // profilePic.setBackgroundResource(R.drawable.image_border);
+                productImage = (ImageView) view.findViewById(R.id.img_product);
                 addtocart = (ImageView) view.findViewById(R.id.addtocart);
                 removefromcart = (ImageView) view.findViewById(R.id.removefromcart);
                 outofstock = (ImageView) view.findViewById(R.id.outofstock);
@@ -202,14 +184,12 @@ public class ProductsActivity extends AppCompatActivity {
                 product_quantity = (TextView) view.findViewById(R.id.product_quantity);
                 product_quantity_dec = (ImageView) view.findViewById(R.id.product_quantity_dec);
                 product_quantity_inc = (ImageView) view.findViewById(R.id.product_quantity_inc);
-
             }
         }
 
         public ProductsAdapter(Context context, List<ProductPojo> verticalList) {
             this.verticalList = verticalList;
             this.context = context;
-
         }
 
         @Override
@@ -221,61 +201,58 @@ public class ProductsActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ProductsAdapter.MyViewHolder holder,final int position) {
+        public void onBindViewHolder(final ProductsAdapter.MyViewHolder holder, final int position) {
             holder.txtView.setText(verticalList.get(position).getName());
             if (verticalList.get(position).getImagelocal() != null) {
                 Picasso.with(context).load("file:///android_asset/"
                         + verticalList.get(position).getImagelocal())
-                        .resize(250, 250).into(holder.profilePic);
+                        .resize(250, 250).into(holder.productImage);
             } else {
                 Picasso.with(context).load(verticalList.get(position).getImage())
-                        .resize(250, 250).into(holder.profilePic);
+                        .resize(250, 250).into(holder.productImage);
             }
 
             holder.price.setText(verticalList.get(position).getPrice());
             holder.wgt.setText(verticalList.get(position).getWgt());
 
             // out of stock flag is on
-            if ( verticalList.get(position).getIsStockAvailable().equals("false")) {
+            if (verticalList.get(position).getIsStockAvailable().equals("false")) {
+
                 holder.outofstock.setVisibility(View.VISIBLE);
                 holder.addtocart.setVisibility(View.GONE);
                 holder.quantityMan.setVisibility(View.GONE);
             } else {
                 holder.outofstock.setVisibility(View.GONE);
-
-
-            MyCart myCartdb = new MyCart(context);
-            myCartdb.open();
-            String[] Qty = myCartdb.checkQuantity(verticalList.get(position).getId());
-            if (Qty == null) {
-                holder.addtocart.setVisibility(View.VISIBLE);
-                holder.quantityMan.setVisibility(View.GONE);
-                // holder.removefromcart.setVisibility(View.GONE);
-            } else {
-                // holder.removefromcart.setVisibility(View.VISIBLE);
-                holder.quantityMan.setVisibility(View.VISIBLE);
-                holder.addtocart.setVisibility(View.GONE);
-                holder.product_quantity.setText(String.valueOf(Qty[0]));
-                // holder.wgt.setText(String.valueOf(Qty[1]));
-                verticalList.get(position).setQuantity(String.valueOf(Qty[0]));
-                verticalList.get(position).setWgt(String.valueOf(Qty[1]));
+                MyCart myCartdb = new MyCart(context);
+                myCartdb.open();
+                String[] Qty = myCartdb.checkQuantity(verticalList.get(position).getId());
+                if (Qty == null) {
+                    holder.addtocart.setVisibility(View.VISIBLE);
+                    holder.quantityMan.setVisibility(View.GONE);
+                    // holder.removefromcart.setVisibility(View.GONE);
+                } else {
+                    // holder.removefromcart.setVisibility(View.VISIBLE);
+                    holder.quantityMan.setVisibility(View.VISIBLE);
+                    holder.addtocart.setVisibility(View.GONE);
+                    holder.product_quantity.setText(String.valueOf(Qty[0]));
+                    verticalList.get(position).setQuantity(String.valueOf(Qty[0]));
+                    verticalList.get(position).setWgt(String.valueOf(Qty[1]));
+                }
+                myCartdb.close();
             }
-            myCartdb.close();
-
-        }
             // END PRODUCT CHECK
 
             holder.addtocart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Added to cart successfully.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Added to cart successfully.", Toast.LENGTH_SHORT).show();
                     byte[] utf8Bytes;
                     String name = null;
                     try {
                         utf8Bytes = verticalList.get(position).getName().getBytes("UTF8");
                         name = new String(utf8Bytes, "UTF8");
                     } catch (UnsupportedEncodingException e) {
-                        Log.e("error","",e);
+                        Log.e("error", "", e);
                     }
                     DatabaseUtil.createProduct(context,
                             verticalList.get(position).getId(), name,
@@ -287,24 +264,10 @@ public class ProductsActivity extends AppCompatActivity {
                     holder.product_quantity.setText(String.valueOf(1));
                     holder.addtocart.setVisibility(View.GONE);
                     HomeActivity.countproductoncart = HomeActivity.countproductoncart + 1;
-                    setBadgeCount(context, mCartMenuIcon,String.valueOf(HomeActivity.countproductoncart));
+                    setBadgeCount(context, mCartMenuIcon, String.valueOf(HomeActivity.countproductoncart));
 
                 }
             });
-
-            holder.removefromcart
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(context, "Product deleted from your cart.", Toast.LENGTH_SHORT).show();
-                            DatabaseUtil.deleteProduct(context, verticalList.get(position).getId());
-                            holder.addtocart.setVisibility(View.VISIBLE);
-                            holder.removefromcart.setVisibility(View.GONE);
-                            HomeActivity.countproductoncart = HomeActivity.countproductoncart - 1;
-                            setBadgeCount(context, mCartMenuIcon, String.valueOf(HomeActivity.countproductoncart));
-
-                        }
-                    });
 
             holder.product_quantity_inc
                     .setOnClickListener(new View.OnClickListener() {
@@ -326,11 +289,7 @@ public class ProductsActivity extends AppCompatActivity {
                             verticalList.get(position).setQuantity(String.valueOf(qty));
                             verticalList.get(position).setWgt(String.valueOf(wgt));
                             holder.product_quantity.setText(String.valueOf(qty));
-                            // holder.wgt.setText(String.valueOf(wgt));
                             DatabaseUtil.updateQtyAndWgt(context, verticalList.get(position).getId(), wgt, qty);
-                            // CartActivity.updatetotal(100);
-                            // context.notifyDataSetChanged();
-
                         }
                     });
 
@@ -366,6 +325,13 @@ public class ProductsActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    private String getCatalog() {
+        SharedPreferences sharedPreferences = getSharedPreferences("catalog", MODE_PRIVATE);
+        String catalog = sharedPreferences.getString("catalog", null);
+        return catalog;
     }
 
 }

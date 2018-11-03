@@ -38,4 +38,26 @@
         <item>@string/tag_chat</item>
         <item>@string/tag_profile</item>
     </string-array>
+    <string name="title_activity_splash">SplashActivity</string>
+
+    <!--Intro slider texts -->
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Vegetables</string>
+    <string name="slide_1_desc">Shop from a wide range of fresh and exotic vegetables online</string>
+
+    <string name="slide_2_title">Fruits</string>
+    <string name="slide_2_desc">Fruits are available in this online fruit shop. Buy fresh fruits &amp; healthy fruits online at best price from this best fruit shop &amp; fill your fruit basket.</string>
+
+    <string name="slide_3_title">Great Discounts</string>
+    <string name="slide_3_desc">Best discounts on every Items!</string>
+
+    <string name="slide_4_title">Free Delivery</string>
+    <string name="slide_4_desc">Free delivery Items on Every weekend only!</string>
+
+
+
 </resources>

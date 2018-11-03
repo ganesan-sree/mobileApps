@@ -33,7 +33,7 @@
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/logout"
                 android:icon="@mipmap/logout"
                 android:title="Logout" />
         </menu>

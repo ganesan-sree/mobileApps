@@ -35,7 +35,6 @@ public class Categorys {
 			is.close();
 			json = new String(buffer, "UTF-8");
 
-			//System.out.println(json);
 		} catch (IOException ex) {
 			Log.e("loadJSONFromAsset", ex.toString());
 			ex.printStackTrace();
@@ -46,55 +45,48 @@ public class Categorys {
 
 	public ArrayList<MasterCategory> getCategoryList(String categoryString) {
 
-		//Log.e("Categoryfilefirebase",""+categoryString);
 		String jsonString = null;
 		if (categoryString != null) {
 			jsonString = categoryString;
 
 		} else {
 			jsonString = loadJSONFromAsset();
-			Log.e("getCategoryList","lading from assets folder");
+			Log.e("FileLoading","loading from assets folder");
 		}
-
-		//Log.e("Categoryfilegoto",jsonString);
 
 		JSONObject jsonObject = null;
 		
 		if(parseJsonError(jsonString)){
 			jsonString = loadJSONFromAsset();
+			Log.e("FileLoading","loading from assets folder1");
 		}
 		
 		ArrayList<MasterCategory> arrayList = new ArrayList<MasterCategory>();
 		try {
-
 			jsonObject = new JSONObject(jsonString);
-
 			JSONArray msg = (JSONArray) jsonObject.get("category");
 			for (int i = 0; i < msg.length(); i++) {
 
 				//System.out.println(msg.getJSONObject(i));
 				MasterCategory masterCategory = new MasterCategory();
 				masterCategory.setId((String) msg.getJSONObject(i).get("id"));
-				masterCategory.setName((String) msg.getJSONObject(i)
-						.get("name"));
-				masterCategory.setImage((String) msg.getJSONObject(i).get(
-						"image"));
+				masterCategory.setName((String) msg.getJSONObject(i).get("name"));
 				if( msg.getJSONObject(i).has("imageLocal")) {
 				masterCategory.setImageLocal((String) msg.getJSONObject(i).get(
 						"imageLocal"));
 				}
-				
+
+				if( msg.getJSONObject(i).has("image")) {
+					masterCategory.setImage((String) msg.getJSONObject(i).get(
+							"image"));
+				}
+
 				arrayList.add(masterCategory);
 			}
-
 		} catch (JSONException e) {
 			Log.e("JSON Error", "error",e);
 		}
-
-
-
 		return arrayList;
-
 	}
 
 	public ArrayList<ProductPojo> getProductList(String categoryid,String categoryList) {
@@ -105,35 +97,29 @@ public class Categorys {
 
 		} else {
 			jsonString = loadJSONFromAsset();
+			Log.e("FileLoading","loading from assets folder");
 		}
 		JSONObject jsonObject = null;
-		
 		if(parseJsonError(jsonString)){
 			jsonString = loadJSONFromAsset();
+			Log.e("FileLoading","loading from assets folder");
 		}
-		
-		
 		ArrayList<ProductPojo> productPojoArrayList = new ArrayList<ProductPojo>();
 
 		try {
 			 jsonObject = new JSONObject(jsonString);
-
 			JSONArray msg = (JSONArray) jsonObject.get("category");
 			for (int i = 0; i < msg.length(); i++) {
-
 				String jsonCatid = (String) msg.getJSONObject(i).get("id");
-
 				if (categoryid != null && categoryid.equals(jsonCatid)) {
 					productPojoArrayList = formProduct((JSONArray) msg
 							.getJSONObject(i).get("products"),
 							productPojoArrayList);
 				}
-
 			}
 		} catch (JSONException e) {
 			Log.e("JSON Error", "Errro while parsing category list");
 		}
-
 		return productPojoArrayList;
 
 	}
@@ -149,12 +135,13 @@ public class Categorys {
 			ProductPojo productPojo = new ProductPojo();
 			productPojo.setId(jsonObject.getString("id"));
 			productPojo.setName(jsonObject.getString("name"));
-			productPojo.setImage(jsonObject.getString("image"));
 			productPojo.setPrice(jsonObject.getString("price"));
 			productPojo.setQuantity("1");
-			//productPojo.setOurprice(jsonObject.getString("our_price"));
-			//productPojo.setOurprice(jsonObject.getString("our_price"));
 			productPojo.setWgt(jsonObject.getString("weight"));
+
+			if(jsonObject.has("image")) {
+				productPojo.setImage(jsonObject.getString("image"));
+			}
 
 			if(jsonObject.has("imageLocal")) {
 				productPojo.setImagelocal(jsonObject.getString("imageLocal"));
@@ -163,9 +150,6 @@ public class Categorys {
 			if(jsonObject.has("isStockAvailable")) {
 				productPojo.setIsStockAvailable(jsonObject.getString("isStockAvailable"));
 			}
-
-			// Log.e("JSON TEST", jsonObject.getString("id"));
-
 			productPojoArrayList.add(productPojo);
 
 		}
@@ -179,10 +163,8 @@ public class Categorys {
 		try {
 			jsonObject = new JSONObject(jsonString);
 			JSONArray msg = (JSONArray) jsonObject.get("category");
-
 		} catch (JSONException e) {
 			Log.e("JSON Error", "Json Parse Error");
-
 			status = true;
 		}
 		return status;
