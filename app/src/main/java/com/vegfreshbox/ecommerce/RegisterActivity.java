@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText first_name, last_name, email, password;
+    EditText first_name,  email, password;
     Button btnlogin, btnregister;
 
     private ProgressDialog mProgressDialog;
@@ -53,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         mProgressDialog = new ProgressDialog(RegisterActivity.this);
         first_name = (EditText) findViewById(R.id.first_name);
-        last_name = (EditText) findViewById(R.id.last_name);
+       // last_name = (EditText) findViewById(R.id.last_name);
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
         btnlogin = (Button) findViewById(R.id.btnlogin);
@@ -100,10 +100,8 @@ public class RegisterActivity extends AppCompatActivity {
     String dataValidate() {
         String message = null;
         if (isEmpty(first_name)) {
-            message = "First Name is required";
-        } else if (isEmpty(last_name)) {
-            message = "Last Name is Required";
-        } else if (!isEmailValid(email)) {
+            message = "Name is required";
+        }  else if (!isEmailValid(email)) {
             message = "Email Address is not Valid";
         } else if (isEmpty(password)) {
             message = "Password is Required";
@@ -143,7 +141,7 @@ public class RegisterActivity extends AppCompatActivity {
                     String token = sharedPreferences.getString("token", null);
                     Log.e("token", token);
                     res = userService.createUser(first_name.getText()
-                                    .toString().trim(), last_name.getText().toString()
+                                    .toString().trim()
                                     .trim(), email.getText().toString().trim(),
                             password.getText().toString().trim(), token);
                 } catch (Exception e) {

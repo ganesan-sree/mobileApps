@@ -29,18 +29,10 @@
             android:layout_height="wrap_content"
             android:textColorHint="#FFFFFF"
             android:textColor="#FFFFFF"
-            android:hint="First Name"
+            android:hint="Name"
             android:maxLength="20"
             android:inputType="textEmailAddress"/>
-        <EditText
-            android:id="@+id/last_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="#FFFFFF"
-            android:textColor="#FFFFFF"
-            android:hint="Last Name"
-            android:maxLength="20"
-            android:inputType="textEmailAddress"/>
+
 
         <EditText
             android:id="@+id/email"
@@ -50,7 +42,6 @@
             android:inputType="textEmailAddress"
             android:maxLength="40"
             android:textColor="#FFFFFF"
-
             android:textColorHint="#FFFFFF" />
 
         <EditText

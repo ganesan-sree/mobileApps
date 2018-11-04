@@ -115,13 +115,13 @@ public class OrderHistory extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
                 String userId = sharedPreferences.getString("userid", null);
                 orderStr = userService.getUserOrder(userId);
-                Log.e("orderstr", orderStr);
+                //Log.e("orderstr", orderStr);
                 if (!VegUtils.isBlank(orderStr) && !orderStr.equals("null")) {
                     JSONObject orders = new JSONObject(orderStr);
                     Iterator<String> keys = orders.keys();
                     while (keys.hasNext()) {
                         String orderId = keys.next();
-                        Log.e("OrderId =", orderId);
+                        //Log.e("OrderId =", orderId);
                         JSONObject order = (JSONObject) orders.get(orderId);
                         OrderHistoryPojo orderHistoryPojo = new OrderHistoryPojo();
                         orderHistoryPojo.setId(orderId);

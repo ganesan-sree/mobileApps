@@ -118,7 +118,7 @@ public class SplashActivity extends Activity implements Animation.AnimationListe
 
     public void storeCatalog(byte[] bytes) throws UnsupportedEncodingException {
         String catalog = new String(bytes, "UTF-8");
-        SharedPreferences sharedPreferences = getSharedPreferences("catalog", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("catalog", catalog);
         editor.commit();

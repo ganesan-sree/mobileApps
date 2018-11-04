@@ -112,6 +112,7 @@ public class PaymentActivity extends AppCompatActivity {
                     userId = sharedPreferences.getString("userid", null);
                     userData = sharedPreferences.getString("userData", null);
                     new FireBaseService().execute("");
+                    HomeActivity.countproductoncart = 0;
                 } else {
                     Toast.makeText(PaymentActivity.this, "You are not connected to Internet please go online", Toast.LENGTH_SHORT).show();
                 }
@@ -143,7 +144,7 @@ public class PaymentActivity extends AppCompatActivity {
             mProgressDialog.show();
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.loading));
-            Log.e("Hi", "Connecting firebase for order create");
+            Log.e("Payment", "Connecting firebase for order create");
             addressData = getAddressData(addressid);
         }
 
@@ -214,7 +215,7 @@ public class PaymentActivity extends AppCompatActivity {
                 text.setText("Congrats, Your Order Placed Successfully, Confirmation Sent to mail address!");
 
                 Toast toast = new Toast(getApplicationContext());
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.setGravity(Gravity.BOTTOM, 0, 0);
                 toast.setDuration(Toast.LENGTH_SHORT);
                 toast.setView(layout);
                 toast.show();

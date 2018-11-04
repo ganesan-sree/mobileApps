@@ -84,7 +84,7 @@ public class UserService {
 
     }
 
-    public static FirebaseResponse createUser(String firstName, String lastName, String email, String password, String token) {
+    public static FirebaseResponse createUser(String firstName, String email, String password, String token) {
 
         FirebaseResponse response = null;
         String generatedString = getCurrentTime();
@@ -96,7 +96,6 @@ public class UserService {
             Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
             dataMap.put("uid", generatedString);
             dataMap.put("firstName", firstName);
-            dataMap.put("lastName", lastName);
             dataMap.put("email", email);
             dataMap.put("password", password);
             dataMap.put("token", token);
@@ -152,7 +151,7 @@ public class UserService {
 
     public static String isCredentialValid(String email, String password) {
 
-//        Log.e("Login in ", "email=" + email + "Passord=" + password);
+        Log.e("Login ", "email=" + email + " Passord=" + password);
         String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/users/";
         String userId = null;
         FirebaseResponse response = null;
@@ -171,10 +170,10 @@ public class UserService {
 
                 Iterator<String> keys = resp.keys();
                 while (keys.hasNext()) {
-                    //System.out.println(keys.next());
+
                     userId = keys.next();
-                   // Log.e("Login call userId====", userId);
-                    System.out.println(userId);
+                    Log.e("Login", "LoginId=="+userId);
+
                     JSONObject user = (JSONObject) resp.get(userId);
                     System.out.println(user.get("email"));
                     if (email.equals(user.get("email")) && password.equals(user.get("password"))) {
@@ -189,7 +188,7 @@ public class UserService {
             Log.e("Login call error ", userId,e);
             return userId;
         }
-        Log.e("Login call response=", "\n\nResult of Check User credentilas:\n" + response);
+        Log.e("Login call response=", userId+"\n\nResult of Check User credentilas:\n" + response);
         return userId;
 
     }
@@ -339,7 +338,7 @@ public class UserService {
 
     public static String getUserOrder(String userId) {
         String orders = null;
-
+        //System.out.println("getUserOrder\n" + userId);
         FirebaseResponse response = null;
         String firebase_baseUrl = "https://freshvegbox-735a1.firebaseio.com/orders/" + userId;
         Firebase firebase;
@@ -347,14 +346,14 @@ public class UserService {
             firebase = new Firebase(firebase_baseUrl);
             response = firebase.get();
             orders=response.getRawBody();
-            System.out.println("\n\nResult of get order details\n" + response);
+           // Log.e("getorderdetails" ,response.getRawBody());
         } catch (FirebaseException | UnsupportedEncodingException e) {
             LOGGER.error(e);
             Log.e("Error", e.getMessage(), e);
 
         }
 
-        System.out.println("\n\nResult of orders\n" + response);
+     //  System.out.println("\n\nResult of orders\n" + response);
         return orders;
 
     }

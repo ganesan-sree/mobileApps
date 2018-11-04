@@ -90,7 +90,7 @@ public class Login extends AppCompatActivity {
             final UserService userService = new UserService();
             Log.e("Login", "login started1");
             userId=userService.isCredentialValid(email.getText().toString().trim(),password.getText().toString().trim());
-
+            Log.e("Login", "Login userid"+userId);
 			if (userId != null) {
 				FirebaseResponse res = userService.getUserById(userId);
 				userData=res.getRawBody();

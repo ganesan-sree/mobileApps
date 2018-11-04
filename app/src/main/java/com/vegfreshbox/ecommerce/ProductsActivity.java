@@ -329,7 +329,7 @@ public class ProductsActivity extends AppCompatActivity {
 
 
     private String getCatalog() {
-        SharedPreferences sharedPreferences = getSharedPreferences("catalog", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
         String catalog = sharedPreferences.getString("catalog", null);
         return catalog;
     }

@@ -83,25 +83,18 @@ public class AddressAdd extends AppCompatActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
 			mProgressDialog.show();
 			mProgressDialog.setCancelable(false);
 			mProgressDialog.setMessage(getString(R.string.loading));
-
-			SharedPreferences sharedPreferences = getSharedPreferences(
-					"loginstate", MODE_PRIVATE);
-
+			SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
 			userId = sharedPreferences.getString("userid", null);
-
-			Log.e("Hi", "Download Commencing");
-
 		}
 
 		@Override
 		protected String doInBackground(String... params) {
 
 			final UserService userService = new UserService();
-			Log.e("344344", "registration started1 ++ " + userId);
+			Log.e("addingaddress", "adding new address started1 ++ " + userId);
 
 			try {
 				if (userId != null) {
@@ -116,26 +109,21 @@ public class AddressAdd extends AppCompatActivity {
 
 				if (isAddressCreated) {
 
-					SharedPreferences sharedPreferences = getSharedPreferences(
-							"loginstate", MODE_PRIVATE);
-					userId = sharedPreferences.getString("userid", null);
+					SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
 
 					if (userId != null) {
-						SharedPreferences.Editor editor = sharedPreferences
-								.edit();
+						SharedPreferences.Editor editor = sharedPreferences.edit();
 						FirebaseResponse res = userService.getUserById(userId);
 						userData = res.getRawBody();
 						if (userData != null) {
 							editor.putString("userData", userData);
 						}
-
 						editor.commit();
 					}
-
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e("Error","Adding Address",e);
 			}
 
 			return "Executed!";
@@ -145,28 +133,20 @@ public class AddressAdd extends AppCompatActivity {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-
-			Log.e("Hi", "Done Downloading.==" + result);
 			mProgressDialog.dismiss();
 			try {
 				if (isAddressCreated) {
-					Toast.makeText(AddressAdd.this, "Address Added!",
-							Toast.LENGTH_SHORT).show();
-					Intent intent = new Intent(AddressAdd.this,
-							CheckoutActivity.class);
+					Toast.makeText(AddressAdd.this, "Address Added!",Toast.LENGTH_SHORT).show();
+					Intent intent = new Intent(AddressAdd.this,CheckoutActivity.class);
 					finish();
 					startActivity(intent);
 				} else {
-					Toast.makeText(AddressAdd.this,
-							"Something went wrong please try again!",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(AddressAdd.this,"Something went wrong please try again!",Toast.LENGTH_SHORT).show();
 				}
 
 			} catch (Exception e) {
-				e.printStackTrace();
-
+				Log.e("Error","Adding Address",e);
 			}
-
 		}
 	}
 

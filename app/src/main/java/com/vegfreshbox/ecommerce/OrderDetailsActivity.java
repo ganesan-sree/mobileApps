@@ -59,7 +59,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
             orderHistoryProductsDetailsPojoArrayList = new ArrayList<OrderHistoryProductsDetailsPojo>();
 
-
+           // Log.e("OrderStrDetail","O="+orderStr);
+          //  Log.e("OrderOrderDetail",""+orderObj);
+           // Log.e("orderId",""+id);
             if (orderStr != null) {
                 JSONObject orders = new JSONObject(orderStr);
                 Iterator<String> keys = orders.keys();
@@ -67,11 +69,11 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 while (keys.hasNext()) {
                     //System.out.println(keys.next());
                     String orderId = keys.next();
-                    Log.e("OrderId++++++", orderId);
+                    //Log.e("OrderId++++++", orderId);
                     JSONObject order = (JSONObject) orders.get(orderId);
                     if (order.has("deliveryAddress")) {
                         JSONObject deliveryAddress = order.getJSONObject("deliveryAddress");
-                        Log.e("delivery address ==", deliveryAddress.toString());
+                        //Log.e("delivery address ==", deliveryAddress.toString());
                         AddressPojo addr = getAddressData(deliveryAddress);
                         deliveryAddrress = addr.toString();
                     }
@@ -91,8 +93,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
                             pr.setQuantity((String) objectInArray.get("productQuantity"));
                             pr.setName((String) objectInArray.get("productName"));
                             pr.setPrice((String) objectInArray.get("productPrice"));
-                            pr.setImage((String) objectInArray.get("productImage"));
                             pr.setWgt((String) objectInArray.get("wgt"));
+                            if (objectInArray.has("productImage")) {
+                                pr.setImage((String) objectInArray.get("productImage"));
+                            }
                             if (objectInArray.has("imagelocal")) {
                                 pr.setImagelocal((String) objectInArray.get("imagelocal"));
                             }
@@ -118,16 +122,16 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 List<Product> products = orderObj.getProducts();
 
                 for (int i = 0, size = products.size(); i < size; i++) {
-                    Product objectInArray = products.get(i);
+                    Product prObj = products.get(i);
                     ProductPojo pr = new ProductPojo();
-                    pr.setId((String) objectInArray.getProductId());
-                    pr.setQuantity((String) objectInArray.getProductQuantity());
-                    pr.setName((String) objectInArray.getProductName());
-                    pr.setPrice((String) objectInArray.getProductPrice());
-                    pr.setImage((String) objectInArray.getProductImage());
-                    pr.setWgt((String) objectInArray.getWgt());
-                    if (objectInArray.getImagelocal() != null) {
-                        pr.setImagelocal((String) objectInArray.getImagelocal());
+                    pr.setId((String) prObj.getProductId());
+                    pr.setQuantity((String) prObj.getProductQuantity());
+                    pr.setName((String) prObj.getProductName());
+                    pr.setPrice((String) prObj.getProductPrice());
+                    pr.setImage((String) prObj.getProductImage());
+                    pr.setWgt((String) prObj.getWgt());
+                    if (prObj.getImagelocal() != null) {
+                        pr.setImagelocal((String) prObj.getImagelocal());
                     }
 
                     orderHistoryProductsDetailsPojo.getProducts().add(pr);
@@ -143,7 +147,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             deliveryAddress.setText(orderHistoryProductsDetailsPojo.getDeliveryAddress());
 
         } catch (Exception e) {
-            e.printStackTrace();
+           Log.e("error","Orderdetails",e);
         }
 
 
