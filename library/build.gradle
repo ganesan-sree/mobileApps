@@ -1,14 +1,22 @@
 apply plugin: 'com.android.library'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'Freshvegbox@2015'
+            storeFile file('C:/Users/sriganes/Desktop/freshvegbox.jks')
+            storePassword 'Freshvegbox@2015'
+        }
+    }
     compileSdkVersion 26
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 16
         versionName "1.2.4"
         vectorDrawables.useSupportLibrary = true
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
@@ -16,8 +24,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     resourcePrefix 'about_'
+    productFlavors {
+    }
 }
 
 tasks.withType(Javadoc) {
@@ -27,9 +36,9 @@ tasks.withType(Javadoc) {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:26.0.0'
+    implementation 'com.android.support:appcompat-v7:26.0.0'
 }
 
 archivesBaseName = 'android-about-page'

@@ -94,7 +94,7 @@ public class AddressAdd extends AppCompatActivity {
 		protected String doInBackground(String... params) {
 
 			final UserService userService = new UserService();
-			Log.e("addingaddress", "adding new address started1 ++ " + userId);
+			//Log.e("addingaddress", "adding new address started1 ++ " + userId);
 
 			try {
 				if (userId != null) {

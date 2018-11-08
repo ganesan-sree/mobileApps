@@ -102,7 +102,6 @@ public class UserService {
             response = firebase.put(dataMap);
 
         } catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException e) {
-            e.printStackTrace();
             Log.e("Registration", e.getMessage());
             LOGGER.error(e);
         }
@@ -132,7 +131,7 @@ public class UserService {
                 while (keys.hasNext()) {
                     //System.out.println(keys.next());
                     JSONObject user = (JSONObject) resp.get(keys.next());
-                    System.out.println(user.get("email"));
+                    //System.out.println(user.get("email"));
                     if (email.equals(user.get("email"))) {
                         return true;
                     }
@@ -144,7 +143,7 @@ public class UserService {
             return false;
         }
 
-        System.out.println("\n\nResult of isEmailAvailble :\n" + response);
+        //System.out.println("\n\nResult of isEmailAvailble :\n" + response);
         return false;
 
     }
@@ -175,7 +174,7 @@ public class UserService {
                     Log.e("Login", "LoginId=="+userId);
 
                     JSONObject user = (JSONObject) resp.get(userId);
-                    System.out.println(user.get("email"));
+                   // System.out.println(user.get("email"));
                     if (email.equals(user.get("email")) && password.equals(user.get("password"))) {
                         return userId;
                     } else {
@@ -219,7 +218,7 @@ public class UserService {
             return false;
         }
 
-        System.out.println("\n\nResult of new address\n" + response);
+       // System.out.println("\n\nResult of new address\n" + response);
         return true;
 
     }
@@ -233,7 +232,6 @@ public class UserService {
             firebase = new Firebase(firebase_baseUrl);
 
             response = firebase.get();
-
             JSONObject resp = new JSONObject(response.getRawBody());
 
             if (resp.has("address")) {
@@ -243,10 +241,10 @@ public class UserService {
                 while (keys.hasNext()) {
                     //System.out.println(keys.next());
                     JSONObject addr = (JSONObject) address.get(keys.next());
-                    System.out.println("address1=" + addr.getString("address1"));
-                    System.out.println("address2=" + addr.getString("address2"));
-                    System.out.println("city=" + addr.getString("city"));
-                    System.out.println("pincode=" + addr.getString("pincode"));
+                    //System.out.println("address1=" + addr.getString("address1"));
+                   // System.out.println("address2=" + addr.getString("address2"));
+                   // System.out.println("city=" + addr.getString("city"));
+                   // System.out.println("pincode=" + addr.getString("pincode"));
 
                 }
             }
@@ -255,7 +253,7 @@ public class UserService {
             LOGGER.error(e);
         }
 
-        System.out.println("\n\nResult of get user details\n" + response);
+        //System.out.println("\n\nResult of get user details\n" + response);
         return response;
 
     }
@@ -313,24 +311,21 @@ public class UserService {
             orderMap.put("status", "Placed");
 
             response = firebase.patch(orderMap);
-
-
             response = firebase.get();
-
             order = new Order();
 
             order.setOrderDate(date);
             order.setOrderId(orderId);
             order.setOrderTotal(orderAmt);
 
-            System.out.println("\n\nResult of get order details\n" + response);
+            //System.out.println("\n\nResult of get order details\n" + response);
         } catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException e) {
             LOGGER.error(e);
             Log.e("Error", e.getMessage(), e);
 
         }
 
-        System.out.println("\n\nResult of orders\n" + response);
+        //System.out.println("\n\nResult of orders\n" + response);
         return order;
 
     }
@@ -390,7 +385,7 @@ public class UserService {
             order.setProducts(products);
             order.setDeliveryAddress(deliveryAddress.toString());
 
-            System.out.println("\n\nResult of get order details\n" + response);
+            //System.out.println("\n\nResult of get order details\n" + response);
         } catch (FirebaseException | UnsupportedEncodingException | JacksonUtilityException e) {
             LOGGER.error(e);
             Log.e("Error", e.getMessage(), e);
@@ -419,10 +414,8 @@ public class UserService {
         } catch (FirebaseException | UnsupportedEncodingException | JSONException e) {
             LOGGER.error(e);
         }
-
-        System.out.println("\n\nResult of category\n" + response);
+       // System.out.println("\n\nResult of category\n" + response);
         return response;
-
     }
 
 

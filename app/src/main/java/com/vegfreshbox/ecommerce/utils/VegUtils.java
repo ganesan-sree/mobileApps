@@ -29,7 +29,7 @@ public class VegUtils {
 
 		try {
 			List<String> li = parseWgt(weightText);
-			Log.e("Parsing wgt +", "" + li);
+			//Log.e("Parsing wgt +", "" + li);
 			weigth = Integer.parseInt(li.get(0));
 			mesure = li.get(1);
 			weigth = weigth / qty;
@@ -48,7 +48,7 @@ public class VegUtils {
 
 		try {
 			List<String> li = parseWgt(weightText);
-			Log.e("Parsing wgt -", "" + li);
+			//Log.e("Parsing wgt -", "" + li);
 			weigth = Integer.parseInt(li.get(0));
 			mesure = li.get(1);
 			weigth = weigth / qty;

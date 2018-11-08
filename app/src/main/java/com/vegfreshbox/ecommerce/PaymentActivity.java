@@ -61,7 +61,7 @@ public class PaymentActivity extends AppCompatActivity {
         Bundle bd = intent.getExtras();
         if (bd != null) {
             addressid = (String) bd.get("addressId");
-            Log.e("Addres Id selected ", addressid);
+          //  Log.e("Addres Id selected ", addressid);
         }
         sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);
         mProgressDialog = new ProgressDialog(PaymentActivity.this);
@@ -144,14 +144,14 @@ public class PaymentActivity extends AppCompatActivity {
             mProgressDialog.show();
             mProgressDialog.setCancelable(false);
             mProgressDialog.setMessage(getString(R.string.loading));
-            Log.e("Payment", "Connecting firebase for order create");
+           // Log.e("Payment", "Connecting firebase for order create");
             addressData = getAddressData(addressid);
         }
 
         @Override
         protected String doInBackground(String... params) {
             final UserService userService = new UserService();
-            Log.e("Payment", "Creating Order Started");
+          //  Log.e("Payment", "Creating Order Started");
 
 
             try {
@@ -237,7 +237,7 @@ public class PaymentActivity extends AppCompatActivity {
 
     private void sendMail(AddressPojo addressData, Order order,String userEmailAddress, Map<String, Object> config) {
         try {
-            Log.e("eee", "start sending mail");
+           // Log.e("eee", "start sending mail");
             GMailSender sender = new GMailSender((String) config.get("gmailEmail"),(String) config.get("gmailPassword"));
             sender.sendMail(
                     "Your Order Detail",

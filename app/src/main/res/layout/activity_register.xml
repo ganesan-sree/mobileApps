@@ -31,6 +31,7 @@
             android:textColor="#FFFFFF"
             android:hint="Name"
             android:maxLength="20"
+            android:contentDescription="Name"
             android:inputType="textEmailAddress"/>
 
 
@@ -38,10 +39,11 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email id"
+            android:hint="Email"
             android:inputType="textEmailAddress"
             android:maxLength="40"
             android:textColor="#FFFFFF"
+            android:contentDescription="Email"
             android:textColorHint="#FFFFFF" />
 
         <EditText
@@ -51,6 +53,7 @@
             android:hint="Password"
             android:inputType="textPassword"
             android:maxLength="25"
+            android:contentDescription="Password"
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF" />
         <LinearLayout

@@ -117,7 +117,7 @@ public class ProductsActivity extends AppCompatActivity {
         myCartdb.open();
         HomeActivity.countproductoncart = myCartdb.countproduct();
 
-        Log.e("CART Count", String.valueOf(HomeActivity.countproductoncart));
+       // Log.e("CART Count", String.valueOf(HomeActivity.countproductoncart));
         myCartdb.close();
 
         setBadgeCount(this, mCartMenuIcon, String.valueOf(HomeActivity.countproductoncart));
@@ -280,8 +280,8 @@ public class ProductsActivity extends AppCompatActivity {
                             if (qtys != null) {
                                 qty = Integer.parseInt(qtys);
                             }
-                            Log.e(productId, wgt);
-                            Log.e(productId, "" + qty);
+                            //Log.e(productId, wgt);
+                           // Log.e(productId, "" + qty);
                             wgt = VegUtils.getWeight(wgt, qty);
 
                             qty = qty + 1;

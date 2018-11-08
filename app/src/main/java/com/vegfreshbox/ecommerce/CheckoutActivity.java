@@ -128,10 +128,6 @@ public class CheckoutActivity extends AppCompatActivity {
                     while (keys.hasNext()) {
                         String addressId = keys.next();
                         JSONObject addr = (JSONObject) address.get(addressId);
-                        System.out.println("address1=" + addr.getString("address1"));
-                        System.out.println("address2=" + addr.getString("address2"));
-                        System.out.println("city=" + addr.getString("city"));
-                        System.out.println("pincode=" + addr.getString("pincode"));
 
                         AddressPojo addressPojo = new AddressPojo();
                         addressPojo.setId(addressId);

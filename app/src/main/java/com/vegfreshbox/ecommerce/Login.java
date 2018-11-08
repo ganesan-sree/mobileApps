@@ -88,9 +88,9 @@ public class Login extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             final UserService userService = new UserService();
-            Log.e("Login", "login started1");
+           // Log.e("Login", "login started1");
             userId=userService.isCredentialValid(email.getText().toString().trim(),password.getText().toString().trim());
-            Log.e("Login", "Login userid"+userId);
+            //Log.e("Login", "Login userid"+userId);
 			if (userId != null) {
 				FirebaseResponse res = userService.getUserById(userId);
 				userData=res.getRawBody();
@@ -103,7 +103,7 @@ public class Login extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            Log.e("Login", "Login process done.==" + result);
+           // Log.e("Login", "Login process done.==" + result);
 
             if(userId!=null){
                 SharedPreferences sharedPreferences = getSharedPreferences("loginstate", MODE_PRIVATE);

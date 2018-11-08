@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.vegfreshbox.ecommerce.CartActivity;
+import com.vegfreshbox.ecommerce.HomeActivity;
 import com.vegfreshbox.ecommerce.R;
 import com.vegfreshbox.ecommerce.database.DatabaseUtil;
 import com.vegfreshbox.ecommerce.pojo.ProductPojo;
@@ -55,16 +56,10 @@ public class CartListAdapter extends ArrayAdapter<ProductPojo> {
             holder.name = (TextView) v.findViewById(R.id.product_list_name);
             holder.price = (TextView) v.findViewById(R.id.price);
             holder.wgt = (TextView) v.findViewById(R.id.wgt);
-            holder.product_quantity = (TextView) v
-                    .findViewById(R.id.product_quantity);
-
-            holder.product_quantity_dec = (ImageView) v
-                    .findViewById(R.id.product_quantity_dec);
-            holder.product_quantity_inc = (ImageView) v
-                    .findViewById(R.id.product_quantity_inc);
-
+            holder.product_quantity = (TextView) v.findViewById(R.id.product_quantity);
+            holder.product_quantity_dec = (ImageView) v.findViewById(R.id.product_quantity_dec);
+            holder.product_quantity_inc = (ImageView) v.findViewById(R.id.product_quantity_inc);
             holder.totalprice = (TextView) v.findViewById(R.id.totalprice);
-
             v.setTag(holder);
         } else {
             holder = (ViewHolder) v.getTag();
@@ -95,21 +90,18 @@ public class CartListAdapter extends ArrayAdapter<ProductPojo> {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int qty = Integer.parseInt(contactlist.get(position)
-                                .getQuantity());
+                        int qty = Integer.parseInt(contactlist.get(position).getQuantity());
                         if (qty == 1) {
-                            DatabaseUtil.deleteProduct(context, contactlist.get(position)
-                                    .getId());
-                            CartListAdapter.this.remove(CartListAdapter.this
-                                    .getItem(position));
+                            DatabaseUtil.deleteProduct(context, contactlist.get(position).getId());
+                            CartListAdapter.this.remove(CartListAdapter.this.getItem(position));
                             CartActivity.updatetotal(100);
+                            HomeActivity.countproductoncart = HomeActivity.countproductoncart - 1;
                             notifyDataSetChanged();
 
                         } else {
 
                             String wgt = contactlist.get(position).getWgt();
                             wgt = VegUtils.getWeightDec(wgt, qty);
-
                             qty = qty - 1;
 
                             contactlist.get(position).setWgt(String.valueOf(wgt));
@@ -117,8 +109,7 @@ public class CartListAdapter extends ArrayAdapter<ProductPojo> {
                             contactlist.get(position).setQuantity(String.valueOf(qty));
                             holder.product_quantity.setText(String.valueOf(qty));
                             holder.price.setText(VegUtils.getSubTotal(contactlist.get(position).getPrice(), "" + qty));
-                            DatabaseUtil.updateQtyAndWgt(getContext(), contactlist.get(position)
-                                    .getId(), wgt, qty);
+                            DatabaseUtil.updateQtyAndWgt(getContext(), contactlist.get(position).getId(), wgt, qty);
                             CartActivity.updatetotal(100);
                             notifyDataSetChanged();
                         }
@@ -136,17 +127,13 @@ public class CartListAdapter extends ArrayAdapter<ProductPojo> {
                         wgt = VegUtils.getWeight(wgt, qty);
                         qty = qty + 1;
 
-
                         contactlist.get(position).setWgt(String.valueOf(wgt));
                         holder.wgt.setText(String.valueOf(wgt));
-
-                        contactlist.get(position).setQuantity(
-                                String.valueOf(qty));
+                        contactlist.get(position).setQuantity( String.valueOf(qty));
                         // Toast.makeText(getContext(),"tttt"+qty,Toast.LENGTH_SHORT).show();
                         holder.product_quantity.setText(String.valueOf(qty));
                         holder.price.setText(VegUtils.getSubTotal(contactlist.get(position).getPrice(), "" + qty));
-                        DatabaseUtil.updateQtyAndWgt(getContext(), contactlist.get(position)
-                                .getId(), wgt, qty);
+                        DatabaseUtil.updateQtyAndWgt(getContext(), contactlist.get(position).getId(), wgt, qty);
 
                         CartActivity.updatetotal(100);
                         notifyDataSetChanged();

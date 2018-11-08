@@ -6,9 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- if you want to load images from a file OR from the internet -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -36,13 +33,10 @@
             android:label="@string/title_activity_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
-        <activity
-            android:name=".SearchActivity"
-            android:label="@string/title_activity_search"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+
+
+
         <activity
             android:name=".CartActivity"
             android:label="@string/title_activity_cart"
@@ -96,6 +90,22 @@
         <activity
             android:name=".startup.WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter android:label="filterFresbVegbox">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data android:scheme="https"
+                    android:host="freshvegbox-735a1.firebaseapp.com"
+                    android:pathPrefix="/freshvegbox" />
+                <!-- note that the leading "/" is required for pathPrefix-->
+                <!-- Accepts URIs that begin with "example://gizmos” -->
+                <data android:scheme="firebaseapp"
+                    android:host="freshvegbox" />
+
+            </intent-filter>
+
         </activity>
     </application>
 

@@ -15,6 +15,7 @@
 
     <ImageView
         android:id="@+id/img_android"
+        android:contentDescription="Category"
         android:adjustViewBounds="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

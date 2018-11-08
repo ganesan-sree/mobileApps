@@ -298,7 +298,7 @@ public class HomeActivity extends AppCompatActivity implements
             output=getCatalog();
             if (VegUtils.isBlank(output)) {
                 readCategoryFireBaseDatabase();
-                Log.e("File not found", "Firebase Storage file not Found");
+                //Log.e("File not found", "Firebase Storage file not Found");
             }
         } catch (Exception e) {
             Log.e("error parsing ", "category json file", e);
@@ -343,7 +343,7 @@ public class HomeActivity extends AppCompatActivity implements
                     category = output.getRawBody();
                     try {
                         storeCatalog(category.getBytes());
-                        Log.e("FileLoading","loading using database"+category.getBytes());
+                        //Log.e("FileLoading","loading using database"+category.getBytes());
                     } catch (Exception e) {
                         Log.e("Error writing file", e.getMessage());
                     }
@@ -357,7 +357,7 @@ public class HomeActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.e(TAG, "CAlling category done!");
+           // Log.e(TAG, "CAlling category done!");
             mProgressDialog.dismiss();
         }
     }

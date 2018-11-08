@@ -131,10 +131,10 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             final UserService userService = new UserService();
-            Log.e("Registration", "registration Started" + params[0]);
+           // Log.e("Registration", "registration Started" + params[0]);
             if (!userService.isEmailAvailble(email.getText()
                     .toString().trim())) {
-                Log.e("Registration", "registration started going to create new user" + email.getText());
+               // Log.e("Registration", "registration started going to create new user" + email.getText());
 
                 try {
                     SharedPreferences sharedPreferences = getSharedPreferences("token", MODE_PRIVATE);
@@ -159,7 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            Log.e("Registrated", "Done Registration.==" + result);
+           // Log.e("Registrated", "Done Registration.==" + result);
             mProgressDialog.dismiss();
             if (res == null) {
 
@@ -174,8 +174,8 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             } else {
                 mProgressDialog.dismiss();
-                Log.e("Status of registration", "" + res.getCode());
-                Log.e("Response of registation", res.getRawBody());
+               // Log.e("Status of registration", "" + res.getCode());
+               // Log.e("Response of registation", res.getRawBody());
                 Toast.makeText(RegisterActivity.this,
                         "Register successfully, Please Login",
                         Toast.LENGTH_SHORT).show();
