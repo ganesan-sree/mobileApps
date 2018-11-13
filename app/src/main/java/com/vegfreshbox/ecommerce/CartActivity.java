@@ -58,14 +58,15 @@ public class CartActivity extends AppCompatActivity {
         checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(VegUtils.isOnline(CartActivity.this)){
+                if(!VegUtils.isOnline(CartActivity.this)){
+                    Toast.makeText(CartActivity.this, "You are not connected to Internet please go online", Toast.LENGTH_SHORT).show();
+                }else if(HomeActivity.countproductoncart <= 0){
+                    Toast.makeText(CartActivity.this, "Cart is empty, Please add some items", Toast.LENGTH_SHORT).show();
+                }else{
                     Intent intent=new Intent(CartActivity.this,CheckoutActivity.class);
                     finish();
                     startActivity(intent);
-                }else{
-                    Toast.makeText(CartActivity.this, "You are not connected to Internet please go online", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
