@@ -95,7 +95,7 @@ public class CheckoutActivity extends AppCompatActivity {
                     mBundle.putString("addressId", addressId);
                     intent.putExtras(mBundle);
                     finish();
-                    Log.e("selectedaddressIds", addressId);
+                    //Log.e("selectedaddressIds", addressId);
                     startActivity(intent);
                 } else {
                     Toast.makeText(CheckoutActivity.this, "Please Choose address first!", Toast.LENGTH_SHORT).show();
@@ -115,7 +115,7 @@ public class CheckoutActivity extends AppCompatActivity {
             mProgressDialog.setMessage(getString(R.string.loading));
 
             ArrayList<AddressPojo> productPojoArrayList = new ArrayList<AddressPojo>();
-            Log.e("CheckoutActivity", "showing address");
+           // Log.e("CheckoutActivity", "showing address");
             try {
                 String userData = sharedPreferences.getString("userData", null);
 

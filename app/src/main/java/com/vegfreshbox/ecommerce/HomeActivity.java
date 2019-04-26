@@ -70,7 +70,7 @@ public class HomeActivity extends AppCompatActivity implements
     String categoryFile = null;
     public static long countproductoncart = 0;
     RelativeLayout notificationCount1;
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "HomeActivity";
 
 
     @Override
@@ -84,7 +84,7 @@ public class HomeActivity extends AppCompatActivity implements
 
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
-                Log.e(key, "getting push notification");
+                //Log.e(key, "getting push notification");
                 if (key.equals("AnotherActivity") && getIntent().getExtras().getString(key).equals("true")) {
                     Intent intent = new Intent(this, AnotherActivity.class);
                     intent.putExtra("message", getIntent().getExtras().getString("message"));
@@ -131,7 +131,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        Log.e(TAG, "onBackPressed");
+        //Log.e(TAG, "onBackPressed");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -273,7 +273,7 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume");
+        //Log.e(TAG, "onResume");
         if(mCartMenuIcon !=null){
             setBadgeCount(this, mCartMenuIcon, String.valueOf(countproductoncart));
         }

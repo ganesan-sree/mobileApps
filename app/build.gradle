@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 1
 def versionMinor = 1
-def versionPatch = 1
+def versionPatch = 2
 
 android {
     signingConfigs {
@@ -79,10 +79,12 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.8.0'
     // image loading
     implementation 'com.facebook.fresco:fresco:0.14.1'
+
     implementation project(':library')
     //implementation project(':chat21')
 }
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
 
 
 configurations.all {

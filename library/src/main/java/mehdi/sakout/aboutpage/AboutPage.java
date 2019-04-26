@@ -160,6 +160,23 @@ public class AboutPage {
         return this;
     }
 
+
+    public AboutPage addPrivacyPolicy(String title,String url) {
+        Element privacyPolicy = new Element();
+        privacyPolicy.setTitle(title);
+        privacyPolicy.setIconDrawable(R.drawable.about_icon_link);
+        privacyPolicy.setIconTint(R.color.about_facebook_color);
+        privacyPolicy.setValue(url);
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        intent.setData(Uri.parse(url));
+        privacyPolicy.setIntent(intent);
+        addItem(privacyPolicy);
+        return this;
+    }
+
     /**
      * Convenience method for {@link AboutPage#addTwitter(String, String)} but with
      * a predefined title string

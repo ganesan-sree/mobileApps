@@ -202,7 +202,7 @@ public class PaymentActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             mProgressDialog.dismiss();
-            Log.e("Payment", "Creating the new order.==" + result);
+            //Log.e("Payment", "Creating the new order.==" + result);
             try {
 
                 mycartdb.open();

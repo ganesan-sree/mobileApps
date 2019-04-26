@@ -44,6 +44,7 @@ public class AboutUs extends AppCompatActivity {
                 //.addInstagram("medyo80")
                 //.addGitHub("medyo")
                 .addItem(getCopyRightsElement())
+                .addPrivacyPolicy("Privacy Policy","https://freshvegbox.flycricket.io/privacy.html")
                 .create();
 
         setContentView(aboutPage);
